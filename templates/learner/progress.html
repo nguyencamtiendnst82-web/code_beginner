@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Tiến độ của tôi - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Tiến độ Học tập của Tôi</h1>
+        <p class="text-slate-500 text-sm mt-1">Theo dõi hành trình tích lũy kiến thức, bài tập đã vượt qua và điểm số trung bình.</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold">
+                <i data-lucide="book-open" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Khóa học tham gia</p>
+                <p class="text-2xl font-black text-slate-900">{{ courses|length }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Bài tập giải đúng</p>
+                <p class="text-2xl font-black text-slate-900">{{ solved_count }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                <i data-lucide="send" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Tổng lượt nộp code</p>
+                <p class="text-2xl font-black text-slate-900">{{ total_submissions }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                <i data-lucide="star" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Điểm trung bình</p>
+                <p class="text-2xl font-black text-slate-900">{{ avg_score }} <span class="text-xs font-normal text-slate-400">/ 10</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrolled Courses Progress -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
+        <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <i data-lucide="layers" class="w-5 h-5 text-brand-600"></i> Tiến độ các khóa học đang theo học
+        </h3>
+
+        {% if courses %}
+        <div class="space-y-6">
+            {% for c in courses %}
+            <div class="p-5 rounded-xl border border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-white text-slate-700 border border-slate-200">{{ c.level }}</span>
+                        <h4 class="font-bold text-slate-900 text-sm hover:text-brand-600">
+                            <a href="{{ url_for('course_detail', course_id=c.id) }}">{{ c.title }}</a>
+                        </h4>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-2">Đã hoàn thành {{ c.done_lessons }}/{{ c.total_lessons }} bài học</p>
+                    
+                    <div class="w-full max-w-md h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-brand-600 rounded-full transition-all" style="width: {{ c.progress_percentage }}%"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <span class="text-sm font-bold text-brand-600">{{ c.progress_percentage }}%</span>
+                    <a href="{{ url_for('course_detail', course_id=c.id) }}" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors">
+                        Tiếp tục học
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8 text-slate-400">
+            <p class="text-xs">Bạn chưa đăng ký tham gia khóa học nào.</p>
+            <a href="{{ url_for('course_list') }}" class="mt-3 inline-block px-4 py-2 text-xs font-bold text-brand-600 bg-brand-50 rounded-xl hover:bg-brand-100">Khám phá khóa học ngay</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Recent Submissions History Table -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <i data-lucide="history" class="w-5 h-5 text-indigo-600"></i> Lịch sử làm bài gần đây
+        </h3>
+
+        {% if history %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-600">
+                <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase border-b border-slate-200">
+                    <tr>
+                        <th class="px-4 py-3">Mã</th>
+                        <th class="px-4 py-3">Bài tập</th>
+                        <th class="px-4 py-3">Chủ đề</th>
+                        <th class="px-4 py-3">Trạng thái</th>
+                        <th class="px-4 py-3">Điểm</th>
+                        <th class="px-4 py-3">Thời gian nộp</th>
+                        <th class="px-4 py-3 text-right">Xem lại</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% for h in history %}
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-3 font-mono text-slate-400">#{{ h.id }}</td>
+                        <td class="px-4 py-3 font-bold text-slate-900">{{ h.exercise_title }}</td>
+                        <td class="px-4 py-3">{{ h.topic }}</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold
+                                {% if h.status == 'Accepted' %}bg-emerald-100 text-emerald-700
+                                {% elif h.status == 'Compile Error' %}bg-rose-100 text-rose-700
+                                {% else %}bg-amber-100 text-amber-700{% endif %}">
+                                {{ h.status }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 font-bold text-slate-800">{{ h.score }} điểm</td>
+                        <td class="px-4 py-3 text-slate-400">{{ h.submitted_at }}</td>
+                        <td class="px-4 py-3 text-right">
+                            <a href="{{ url_for('submission_detail', submission_id=h.id) }}" class="text-brand-600 hover:text-brand-800 font-semibold">Chi tiết</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-xs text-slate-400 italic text-center py-6">Chưa có bài nộp nào.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

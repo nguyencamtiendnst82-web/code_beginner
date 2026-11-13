@@ -1,0 +1,20 @@
+{
+  "db_type": "sqlserver",
+  "sqlserver": {
+    "server": "localhost\\SQLEXPRESS05",
+    "database": "codebeginner",
+    "trusted_connection": "yes",
+    "driver": "ODBC Driver 17 for SQL Server"
+  },
+  "mysql": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "root",
+    "password": "",
+    "database": "codebeginner",
+    "charset": "utf8mb4"
+  },
+  "sqlite": {
+    "db_path": "codebeginner.db"
+  }
+}

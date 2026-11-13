@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Danh sách Học viên - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Breadcrumb & Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="hover:text-rose-600">Quản trị</a>
+                {% else %}
+                    <a href="{{ url_for('expert_dashboard') }}" class="hover:text-amber-600">Chuyên gia</a>
+                {% endif %}
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span class="text-slate-800 font-semibold">Danh sách học viên</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Danh sách Học viên Hệ thống</h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                Theo dõi toàn bộ học viên đã đăng ký, kết quả thi đầu vào, tiến độ học tập và phân tích điểm yếu học tập.
+            </p>
+        </div>
+
+        {% if current_user.role == 'admin' %}
+        <a href="{{ url_for('admin_users') }}" class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-rose-600 hover:bg-rose-700 shadow-md shadow-rose-600/20 flex items-center gap-2 transition-all self-start sm:self-auto">
+            <i data-lucide="shield" class="w-4 h-4"></i> Quản lý toàn bộ tài khoản
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- 3 Quick Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
+                <i data-lucide="users" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Tổng số học viên</p>
+                <p class="text-2xl font-black text-slate-900">{{ total_students }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Đã thi đầu vào</p>
+                <p class="text-2xl font-black text-slate-900">{{ tested_count }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+                <i data-lucide="code-2" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Đã giải bài tập C++</p>
+                <p class="text-2xl font-black text-slate-900">{{ active_solvers }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <form method="GET" action="{{ url_for('student_list_view') }}" class="mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 sm:grid-cols-12 gap-3">
+        <div class="sm:col-span-6 relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+            <input type="text" name="q" value="{{ keyword }}" placeholder="Tìm theo tên học viên, username, email..."
+                   class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+
+        <div class="sm:col-span-3">
+            <select name="test_status" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                <option value="">Tất cả trạng thái thi</option>
+                <option value="done" {% if test_filter == 'done' %}selected{% endif %}>Đã làm test đầu vào</option>
+                <option value="not_yet" {% if test_filter == 'not_yet' %}selected{% endif %}>Chưa làm test đầu vào</option>
+            </select>
+        </div>
+
+        <div class="sm:col-span-3 flex items-center gap-2">
+            <select name="status" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                <option value="">Tất cả trạng thái</option>
+                <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Hoạt động</option>
+                <option value="locked" {% if status_filter == 'locked' %}selected{% endif %}>Đã bị khóa</option>
+            </select>
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm transition-colors shadow-sm flex items-center gap-1.5">
+                <i data-lucide="filter" class="w-3.5 h-3.5"></i> Lọc
+            </button>
+        </div>
+    </form>
+
+    <!-- Students Table -->
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm text-slate-600">
+                <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-4">Mã</th>
+                        <th class="px-6 py-4">Học viên</th>
+                        <th class="px-6 py-4">Email & Ngày tham gia</th>
+                        <th class="px-6 py-4">Thi đầu vào</th>
+                        <th class="px-6 py-4">Luyện tập C++</th>
+                        <th class="px-6 py-4">Khóa học ghi danh</th>
+                        <th class="px-6 py-4">Trạng thái</th>
+                        <th class="px-6 py-4 text-right">Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% if students %}
+                        {% for s in students %}
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-6 py-4 font-mono text-slate-400">#{{ s.id }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">
+                                        {{ s.full_name[:1].upper() }}
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-slate-900 block leading-tight">{{ s.full_name }}</span>
+                                        <span class="text-[11px] text-slate-400 font-mono">@{{ s.username }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-xs font-mono text-slate-600">{{ s.email }}</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">{{ s.created_at[:10] }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if s.entrance_score is not none %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                        {{ s.entrance_score }}/15 đ
+                                        {% if s.entrance_class %} • {{ s.entrance_class }}{% endif %}
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-500">
+                                        Chưa làm test
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                                        {{ s.solved_count }} bài đúng
+                                    </span>
+                                    <span class="text-[11px] text-slate-400">
+                                        ({{ s.total_submissions }} lần nộp)
+                                    </span>
+                                </div>
+                                {% if s.total_submissions > 0 %}
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Điểm TB: <span class="font-bold text-slate-600">{{ s.avg_score }}/10</span></p>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if s.courses %}
+                                    <div class="space-y-1">
+                                        {% for c in s.courses %}
+                                        <div class="flex items-center gap-1.5 text-xs">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+                                            <span class="font-semibold text-slate-700 truncate max-w-[140px]" title="{{ c.title }}">{{ c.title }}</span>
+                                            <span class="text-[10px] font-mono text-brand-600 font-bold">({{ c.progress_percentage }}%)</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-xs text-slate-400 italic">Chưa ghi danh</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if s.status == 'active' %}
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Hoạt động
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Đã khóa
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <a href="{{ url_for('weakness_analysis', student_id=s.id) }}"
+                                       class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 flex items-center gap-1 transition-colors"
+                                       title="Xem radar phân tích điểm yếu & lộ trình">
+                                        <i data-lucide="activity" class="w-3.5 h-3.5"></i> Điểm yếu
+                                    </a>
+                                    <a href="{{ url_for('expert_submissions', student_id=s.id) }}"
+                                       class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 flex items-center gap-1 transition-colors"
+                                       title="Xem lịch sử bài nộp code">
+                                        <i data-lucide="terminal" class="w-3.5 h-3.5"></i> Bài nộp
+                                    </a>
+                                    {% if current_user.role == 'admin' %}
+                                    <form method="POST" action="{{ url_for('admin_toggle_user_status', user_id=s.id) }}" class="inline" onsubmit="return confirm('Bạn có chắc muốn cập nhật trạng thái học viên {{ s.username }}?');">
+                                        <button type="submit" class="p-1.5 rounded-lg {% if s.status == 'active' %}text-rose-600 hover:bg-rose-50{% else %}text-emerald-600 hover:bg-emerald-50{% endif %}" title="{% if s.status == 'active' %}Khóa tài khoản{% else %}Mở khóa{% endif %}">
+                                            <i data-lucide="{% if s.status == 'active' %}lock{% else %}unlock{% endif %}" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="px-6 py-12 text-center text-slate-400">
+                                <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                                    <i data-lucide="users" class="w-6 h-6"></i>
+                                </div>
+                                <p class="text-sm font-semibold text-slate-600">Không tìm thấy học viên nào phù hợp</p>
+                                <p class="text-xs text-slate-400 mt-1">Hãy thử xóa bộ lọc tìm kiếm để xem danh sách đầy đủ.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

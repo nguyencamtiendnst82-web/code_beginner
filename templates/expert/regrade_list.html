@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Yêu cầu phúc khảo bài tập - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700">Chuyên môn & Chấm bài</span>
+                <span class="text-xs text-slate-400">Xử lý khiếu nại điểm</span>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 mt-1">Hàng chờ phúc khảo kết quả bài nộp</h1>
+        </div>
+        <a href="{{ url_for('expert_dashboard') }}" class="px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold rounded-xl transition-colors">
+            Quay lại Dashboard
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        {% if regrades %}
+            {% for r in regrades %}
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                        <div>
+                            <span class="text-xs text-slate-400">Mã yêu cầu #{{ r.id }} • Học viên: <strong class="text-slate-800">{{ r.student_name }}</strong></span>
+                            <h3 class="text-base font-bold text-slate-900 mt-0.5">Bài tập: {{ r.exercise_title }}</h3>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">
+                                Điểm hiện tại: {{ r.current_score }}đ ({{ r.current_status }})
+                            </span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase
+                                {% if r.status == 'pending' %}bg-amber-100 text-amber-700
+                                {% elif r.status == 'approved' %}bg-emerald-100 text-emerald-700
+                                {% else %}bg-rose-100 text-rose-700{% endif %}">
+                                {{ r.status }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="py-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Lý do khiếu nại của học viên:</p>
+                        <div class="p-3.5 bg-slate-50 rounded-xl text-xs text-slate-700 border border-slate-100 whitespace-pre-wrap">
+                            {{ r.reason }}
+                        </div>
+                    </div>
+
+                    {% if r.status == 'pending' %}
+                        <form method="POST" action="{{ url_for('expert_resolve_regrade', regrade_id=r.id) }}" class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
+                            <input type="number" name="new_score" value="{{ r.current_score }}" min="0" max="100" placeholder="Điểm mới"
+                                class="w-24 text-xs px-3 py-2 rounded-xl border border-slate-200 font-bold text-center">
+                            <input type="text" name="notes" placeholder="Lời giải thích / Nhận xét của Chuyên gia..." required
+                                class="flex-1 w-full text-xs px-3 py-2 rounded-xl border border-slate-200">
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button type="submit" name="decision" value="approved" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl">
+                                    Cập nhật điểm mới
+                                </button>
+                                <button type="submit" name="decision" value="rejected" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl">
+                                    Giữ nguyên điểm
+                                </button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-xs text-slate-500 pt-2 border-t border-slate-100">
+                            Đã giải quyết bởi chuyên gia: <strong>{{ r.reviewer_notes or 'Không có ghi chú' }}</strong>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
+                <i data-lucide="check-check" class="w-12 h-12 text-emerald-400 mx-auto mb-3"></i>
+                <h3 class="text-sm font-bold text-slate-700">Hiện không có yêu cầu phúc khảo nào</h3>
+                <p class="text-xs text-slate-400 mt-1">Tất cả bài tập đã được chấm đồng thuận và không có khiếu nại đang chờ.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

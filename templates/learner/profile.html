@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Hồ sơ cá nhân - {{ user.full_name }} - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Profile Header Card -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div class="flex items-center gap-5">
+            <div class="w-16 h-16 rounded-2xl bg-brand-600 text-white flex items-center justify-center font-bold text-2xl shadow-md shadow-brand-500/20">
+                {{ user.full_name[:1].upper() }}
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-2xl font-bold text-slate-900">{{ user.full_name }}</h1>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold
+                        {% if user.role == 'admin' %}bg-rose-100 text-rose-700
+                        {% elif user.role == 'expert' %}bg-amber-100 text-amber-700
+                        {% else %}bg-brand-100 text-brand-700{% endif %}">
+                        {% if user.role == 'admin' %}Quản trị viên
+                        {% elif user.role == 'expert' %}Chuyên gia
+                        {% else %}Học viên{% endif %}
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">@{{ user.username }} • Tham gia từ: {{ user.created_at[:10] }}</p>
+                <p class="text-xs text-slate-600 mt-2 italic">{{ user.bio or 'Chưa có tiểu sử.' }}</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ url_for('logout') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 flex items-center gap-1.5 transition-colors">
+                <i data-lucide="log-out" class="w-4 h-4"></i> Đăng xuất
+            </a>
+        </div>
+    </div>
+
+    <!-- Achievements & Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                <i data-lucide="award" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Bài tập hoàn thành</p>
+                <p class="text-lg font-bold text-slate-900">{{ solved_exercises }} bài</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold">
+                <i data-lucide="book-check" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Bài lý thuyết</p>
+                <p class="text-lg font-bold text-slate-900">{{ completed_lessons }} bài</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                <i data-lucide="layers" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Khóa học đăng ký</p>
+                <p class="text-lg font-bold text-slate-900">{{ enrolled_courses|length }} khóa</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Forms: Personal Info & Change Password -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Form 1: Edit Profile -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+            <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i data-lucide="user-pen" class="w-5 h-5 text-brand-600"></i> Cập nhật thông tin cá nhân
+            </h3>
+
+            <form method="POST" action="{{ url_for('profile') }}" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Tên đăng nhập (Username)</label>
+                    <input type="text" value="{{ user.username }}" disabled
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-mono">
+                    <span class="text-[10px] text-slate-400">Tên đăng nhập không thể thay đổi sau khi đăng ký.</span>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Địa chỉ Email</label>
+                    <input type="email" value="{{ user.email }}" disabled
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-mono">
+                </div>
+
+                <div>
+                    <label for="full_name" class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Họ và tên <span class="text-rose-500">*</span></label>
+                    <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" required
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-800 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+
+                <div>
+                    <label for="bio" class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Tiểu sử ngắn</label>
+                    <textarea id="bio" name="bio" rows="3"
+                              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-800 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                              placeholder="Mục tiêu học lập trình của bạn...">{{ user.bio }}</textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="px-5 py-2.5 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-sm transition-all">
+                        Lưu thông tin cá nhân
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Form 2: Change Password -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+            <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-5 h-5 text-indigo-600"></i> Đổi mật khẩu
+            </h3>
+
+            <form method="POST" action="{{ url_for('change_password') }}" class="space-y-4 text-xs">
+                <div>
+                    <label for="old_password" class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Mật khẩu hiện tại</label>
+                    <input type="password" id="old_password" name="old_password" required
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-800 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                           placeholder="••••••••">
+                </div>
+
+                <div>
+                    <label for="new_password" class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Mật khẩu mới</label>
+                    <input type="password" id="new_password" name="new_password" required minlength="6"
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-800 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                           placeholder="Tối thiểu 6 ký tự">
+                </div>
+
+                <div>
+                    <label for="confirm_new_password" class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Xác nhận mật khẩu mới</label>
+                    <input type="password" id="confirm_new_password" name="confirm_new_password" required minlength="6"
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-800 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                           placeholder="Nhập lại mật khẩu mới">
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="px-5 py-2.5 rounded-xl font-bold text-white bg-slate-800 hover:bg-slate-900 shadow-sm transition-all">
+                        Cập nhật mật khẩu
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

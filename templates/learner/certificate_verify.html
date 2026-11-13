@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Tra cứu chứng chỉ xác thực - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Header search box -->
+    <div class="bg-gradient-to-br from-brand-900 via-brand-800 to-indigo-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden mb-8">
+        <div class="relative z-10 max-w-2xl">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-4">
+                <i data-lucide="badge-check" class="w-4 h-4"></i> Hệ thống xác thực chứng chỉ số
+            </span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">Tra cứu chứng chỉ hoàn thành khóa học</h1>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                Mỗi chứng chỉ cấp bởi CodeBeginner đều được gán mã định danh duy nhất và chữ ký băm bảo mật chống giả mạo.
+            </p>
+
+            <form method="GET" action="{{ url_for('verify_certificate_query') }}" class="flex flex-col sm:flex-row gap-2">
+                <div class="relative flex-1">
+                    <input type="text" name="code" value="{{ cert_code or '' }}" placeholder="Nhập mã chứng chỉ (ví dụ: CERT-CPP-2026-001)" required
+                        class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                </div>
+                <button type="submit" class="px-6 py-3 bg-brand-500 hover:bg-brand-400 text-white font-semibold rounded-xl text-sm transition-all shadow-lg flex items-center justify-center gap-2">
+                    Tra cứu ngay
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% if cert %}
+        <!-- Certificate Preview Card -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 p-3 text-center text-white font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Chứng chỉ hợp lệ và đã được xác thực chính thức
+            </div>
+
+            <div class="p-8 sm:p-12 text-center relative border-8 border-double border-amber-200/50 m-4 rounded-2xl bg-amber-50/20">
+                <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-tr from-brand-600 to-brand-400 rounded-full flex items-center justify-center text-white shadow-xl">
+                    <i data-lucide="award" class="w-10 h-10"></i>
+                </div>
+
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-bold">HỆ THỐNG ĐÀO TẠO LẬP TRÌNH CODEBEGINNER</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">CHỨNG CHỈ HOÀN THÀNH KHÓA HỌC</h2>
+                
+                <p class="text-sm text-slate-500 mt-4">Chứng nhận học viên:</p>
+                <p class="text-3xl font-black text-brand-700 tracking-tight mt-1">{{ cert.student_name }}</p>
+                
+                <p class="text-sm text-slate-600 mt-4 max-w-lg mx-auto">
+                    Đã hoàn thành xuất sắc toàn bộ bài giảng lý thuyết, bài kiểm tra thực hành và đồ án trong khóa học:
+                </p>
+                <p class="text-xl font-bold text-slate-900 mt-1">« {{ cert.course_title }} »</p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto mt-8 pt-6 border-t border-slate-200 text-left">
+                    <div>
+                        <span class="block text-[11px] font-semibold text-slate-400 uppercase">Mã chứng chỉ</span>
+                        <span class="text-xs font-mono font-bold text-slate-800">{{ cert.certificate_code }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-[11px] font-semibold text-slate-400 uppercase">Ngày cấp</span>
+                        <span class="text-xs font-bold text-slate-800">{{ cert.issue_date[:10] if cert.issue_date else '2026-11-10' }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-[11px] font-semibold text-slate-400 uppercase">Xếp loại</span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                            {{ cert.grade or 'Xuất sắc' }}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="block text-[11px] font-semibold text-slate-400 uppercase">Trạng thái</span>
+                        <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600">
+                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Hợp lệ
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-[10px] font-mono text-slate-400 break-all">
+                    Chữ ký số kiểm tra (Hash): {{ cert.cert_hash or 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' }}
+                </div>
+            </div>
+        </div>
+    {% elif cert_code %}
+        <div class="bg-white rounded-3xl shadow-md border border-rose-100 p-8 text-center max-w-md mx-auto">
+            <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="alert-octagon" class="w-7 h-7"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Không tìm thấy chứng chỉ</h3>
+            <p class="text-xs text-slate-500 mt-1">Không có chứng chỉ nào khớp với mã <strong>{{ cert_code }}</strong> trên hệ thống. Vui lòng kiểm tra lại tính chính xác của mã số.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

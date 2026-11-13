@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Người dùng & Phân quyền - Admin - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <a href="{{ url_for('admin_dashboard') }}" class="hover:text-rose-600">Dashboard Quản trị</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span class="text-slate-800 font-semibold">Người dùng</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Quản lý Tài khoản & Phân quyền</h1>
+            <p class="text-xs text-slate-500 mt-1">Quản lý học viên, cấp quyền Chuyên gia/Giáo viên và khóa/mở khóa tài khoản.</p>
+        </div>
+
+        <button type="button" onclick="openCreateExpertModal()" class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-rose-600 hover:bg-rose-700 shadow-md shadow-rose-600/20 flex items-center gap-2 transition-all">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> Cấp tài khoản Chuyên gia mới
+        </button>
+    </div>
+
+    <!-- Quick Role Tabs -->
+    <div class="flex items-center gap-2 mb-6 border-b border-slate-200 pb-3 overflow-x-auto">
+        <a href="{{ url_for('admin_users') }}"
+           class="px-4 py-2 rounded-xl text-xs font-bold transition-all {% if not role_filter %}bg-slate-900 text-white shadow-sm{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
+            Tất cả người dùng ({{ role_counts.all }})
+        </a>
+        <a href="{{ url_for('admin_users', role='learner') }}"
+           class="px-4 py-2 rounded-xl text-xs font-bold transition-all {% if role_filter == 'learner' %}bg-brand-600 text-white shadow-sm{% else %}bg-brand-50 text-brand-700 hover:bg-brand-100{% endif %}">
+            🎓 Danh sách Học viên ({{ role_counts.learner }})
+        </a>
+        <a href="{{ url_for('admin_users', role='expert') }}"
+           class="px-4 py-2 rounded-xl text-xs font-bold transition-all {% if role_filter == 'expert' %}bg-amber-600 text-white shadow-sm{% else %}bg-amber-50 text-amber-700 hover:bg-amber-100{% endif %}">
+            ⭐ Chuyên gia / GV ({{ role_counts.expert }})
+        </a>
+        <a href="{{ url_for('admin_users', role='admin') }}"
+           class="px-4 py-2 rounded-xl text-xs font-bold transition-all {% if role_filter == 'admin' %}bg-rose-600 text-white shadow-sm{% else %}bg-rose-50 text-rose-700 hover:bg-rose-100{% endif %}">
+            🛡️ Quản trị viên ({{ role_counts.admin }})
+        </a>
+    </div>
+
+    <!-- Search & Filter Form -->
+    <form method="GET" action="{{ url_for('admin_users') }}" class="mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 sm:grid-cols-12 gap-3">
+        <div class="sm:col-span-6 relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+            <input type="text" name="q" value="{{ keyword }}" placeholder="Tìm kiếm theo họ tên, email hoặc tên đăng nhập..."
+                   class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+        </div>
+
+        <div class="sm:col-span-3">
+            <select name="role" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white">
+                <option value="">Tất cả vai trò</option>
+                <option value="learner" {% if role_filter == 'learner' %}selected{% endif %}>Học viên</option>
+                <option value="expert" {% if role_filter == 'expert' %}selected{% endif %}>Chuyên gia / GV</option>
+                <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Quản trị viên</option>
+            </select>
+        </div>
+
+        <div class="sm:col-span-3 flex items-center gap-2">
+            <select name="status" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white">
+                <option value="">Tất cả trạng thái</option>
+                <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Đang hoạt động</option>
+                <option value="locked" {% if status_filter == 'locked' %}selected{% endif %}>Đã bị khóa</option>
+            </select>
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs sm:text-sm transition-colors shadow-sm">
+                Lọc
+            </button>
+        </div>
+    </form>
+
+    <!-- User Table -->
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm text-slate-600">
+                <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-4">Mã</th>
+                        <th class="px-6 py-4">Họ và tên / Username</th>
+                        <th class="px-6 py-4">Email</th>
+                        <th class="px-6 py-4">Vai trò</th>
+                        <th class="px-6 py-4">Trạng thái</th>
+                        <th class="px-6 py-4">Ngày tạo</th>
+                        <th class="px-6 py-4 text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% for u in users %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-mono text-slate-400">#{{ u.id }}</td>
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-slate-900 block">{{ u.full_name }}</span>
+                            <span class="text-[11px] text-slate-400 font-mono">@{{ u.username }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-xs font-mono text-slate-600">{{ u.email }}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold
+                                {% if u.role == 'admin' %}bg-rose-100 text-rose-700
+                                {% elif u.role == 'expert' %}bg-amber-100 text-amber-700
+                                {% else %}bg-brand-100 text-brand-700{% endif %}">
+                                {% if u.role == 'admin' %}Admin
+                                {% elif u.role == 'expert' %}Chuyên gia
+                                {% else %}Học viên{% endif %}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if u.status == 'active' %}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Hoạt động
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Đã khóa
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-slate-400 text-xs">{{ u.created_at[:10] }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <!-- Change Role Button -->
+                                <button type="button" onclick="openChangeRoleModal({{ u.id }}, '{{ u.full_name }}', '{{ u.role }}')" class="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100" title="Điều chỉnh vai trò">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                </button>
+
+                                <!-- Toggle Lock Button -->
+                                {% if u.id != current_user.id %}
+                                <form method="POST" action="{{ url_for('admin_toggle_user_status', user_id=u.id) }}" class="inline" onsubmit="return confirm('Bạn có chắc muốn {% if u.status == 'active' %}khóa{% else %}mở khóa{% endif %} tài khoản {{ u.username }}?');">
+                                    <button type="submit" class="p-1.5 rounded-lg {% if u.status == 'active' %}text-rose-600 hover:bg-rose-50{% else %}text-emerald-600 hover:bg-emerald-50{% endif %}" title="{% if u.status == 'active' %}Khóa tài khoản{% else %}Mở khóa{% endif %}">
+                                        <i data-lucide="{% if u.status == 'active' %}lock{% else %}unlock{% endif %}" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal: Create Expert Account -->
+<div id="create-expert-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="award" class="w-5 h-5 text-amber-600"></i> Cấp tài khoản Chuyên gia / Giảng viên
+            </h3>
+            <button type="button" onclick="closeCreateExpertModal()" class="text-slate-400 hover:text-slate-700">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ url_for('admin_create_expert') }}" class="space-y-4 text-xs">
+            <div>
+                <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Họ và tên chuyên gia <span class="text-rose-500">*</span></label>
+                <input type="text" name="full_name" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500" placeholder="ThS. Nguyễn Văn A">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Tên đăng nhập (Username) <span class="text-rose-500">*</span></label>
+                <input type="text" name="username" required minlength="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500" placeholder="expert_a">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Địa chỉ Email <span class="text-rose-500">*</span></label>
+                <input type="email" name="email" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500" placeholder="expert_a@codebeginner.edu.vn">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Mật khẩu khởi tạo <span class="text-rose-500">*</span></label>
+                <input type="password" name="password" required minlength="6" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500" placeholder="Tối thiểu 6 ký tự">
+                <span class="text-[10px] text-slate-400">Mật khẩu được mã hóa an toàn trước khi lưu vào cơ sở dữ liệu.</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closeCreateExpertModal()" class="py-2.5 px-4 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200">Hủy</button>
+                <button type="submit" class="py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-sm">Cấp tài khoản</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Change Role -->
+<div id="change-role-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <h3 class="text-base font-bold text-slate-900">Điều chỉnh vai trò: <span id="change-role-username" class="text-rose-600"></span></h3>
+        <form id="change-role-form" method="POST" action="" class="space-y-4 text-xs">
+            <div>
+                <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Chọn vai trò mới</label>
+                <select name="role" id="change-role-select" class="w-full p-2.5 rounded-xl border border-slate-300 bg-white">
+                    <option value="learner">Học viên (Learner)</option>
+                    <option value="expert">Chuyên gia / GV (Expert)</option>
+                    <option value="admin">Quản trị viên (Admin)</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button type="button" onclick="closeChangeRoleModal()" class="py-2 px-3 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200">Hủy</button>
+                <button type="submit" class="py-2 px-3 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700">Lưu vai trò</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const expertModal = document.getElementById('create-expert-modal');
+    function openCreateExpertModal() {
+        expertModal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+    function closeCreateExpertModal() {
+        expertModal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    const roleModal = document.getElementById('change-role-modal');
+    const roleForm = document.getElementById('change-role-form');
+    const roleUsername = document.getElementById('change-role-username');
+    const roleSelect = document.getElementById('change-role-select');
+
+    function openChangeRoleModal(userId, fullName, currentRole) {
+        roleForm.action = `/admin/users/${userId}/update-role`;
+        roleUsername.textContent = fullName;
+        roleSelect.value = currentRole;
+        roleModal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeChangeRoleModal() {
+        roleModal.classList.add('opacity-0', 'pointer-events-none');
+    }
+</script>
+{% endblock %}

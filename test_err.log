@@ -1,0 +1,621 @@
+﻿python : EF...EEE
+At line:1 char:1
++ python C:\Users\LENOVO\.gemini\antigravity\brain\14c84320-ff44-4acd-b ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (EF...EEE:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+======================================================================
+ERROR: test_01_public_certificate_verification (__main__.SpecFeaturesTestSuite.test_01_public_certificate_verification)
+Ki\u1ec3m tra trang tra c\u1ee9u ch\u1ee9ng ch\u1ec9 c⌠ng khai
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\.gemini\antigravity\brain\14c84320-ff44-4acd-bd31-c8534ebca4ea\scratch\test_spec_features.py", 
+line 20, in test_01_public_certificate_verification
+    res = self.client.get('/certificate/verify/CERT-CPP-2026-001')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1162, in get
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\testing.py", line 235, in open
+    response = super().open(
+               ^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1116, in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 988, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1264, in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\app.py", line 2476, in verify_certificate_code
+    cursor.execute("""
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\database.py", line 252, in execute
+    self._cursor.execute(trans_query, params)
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 
+'cert_code'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could 
+not be prepared. (8180)")
+
+======================================================================
+ERROR: test_06_moderator_queue (__main__.SpecFeaturesTestSuite.test_06_moderator_queue)
+Ki\u1ec3m tra hαng ch\u1edd duy\u1ec7t bαi \u0111\u0103ng vα x\u1eed l² bßo cßo vi ph\u1ea1m c\u1ee7a Moderator
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\.gemini\antigravity\brain\14c84320-ff44-4acd-bd31-c8534ebca4ea\scratch\test_spec_features.py", 
+line 119, in test_06_moderator_queue
+    res_reports = self.client.get('/moderator/reports')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1162, in get
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\testing.py", line 235, in open
+    response = super().open(
+               ^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1116, in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 988, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1264, in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\app.py", line 85, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\app.py", line 2744, in moderator_reports
+    cursor.execute("""
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\database.py", line 254, in execute
+    self._cursor.execute(trans_query)
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 
+'reporter_id'. (207) (SQLExecDirectW)")
+
+======================================================================
+ERROR: test_07_admin_topics_health_and_backups (__main__.SpecFeaturesTestSuite.test_07_admin_topics_health_and_backups)
+Ki\u1ec3m tra ch\u1ee9c n\u0103ng Admin: Danh m\u1ee5c ch\u1ee7 \u0111\u1ec1, S\u1ee9c kh\u1ecfe h\u1ec7 th\u1ed1ng, 
+Sao l\u01b0u CSDL
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\.gemini\antigravity\brain\14c84320-ff44-4acd-bd31-c8534ebca4ea\scratch\test_spec_features.py", 
+line 139, in test_07_admin_topics_health_and_backups
+    res_create = self.client.post('/admin/backups/create', follow_redirects=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1167, in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\testing.py", line 235, in open
+    response = super().open(
+               ^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1116, in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 988, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1264, in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\app.py", line 85, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\app.py", line 2899, in admin_create_backup
+    cursor.execute("""
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\database.py", line 252, in execute
+    self._cursor.execute(trans_query, params)
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 
+'file_path'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could 
+not be prepared. (8180)")
+
+======================================================================
+ERROR: test_08_course_review_and_learning_goal (__main__.SpecFeaturesTestSuite.test_08_course_review_and_learning_goal)
+Ki\u1ec3m tra h\u1ecdc viΩn g\u1eedi \u0111ßnh giß 5 sao vα thi\u1ebft l\u1eadp m\u1ee5c tiΩu h\u1ecdc t\u1eadp
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\.gemini\antigravity\brain\14c84320-ff44-4acd-bd31-c8534ebca4ea\scratch\test_spec_features.py", 
+line 147, in test_08_course_review_and_learning_goal
+    res_rev = self.client.post('/courses/1/review', data={
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1167, in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\testing.py", line 235, in open
+    response = super().open(
+               ^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1116, in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 988, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\werkzeug\test.py", line 1264, in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-pack
+ages\Python312\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\app.py", line 72, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\app.py", line 2414, in course_review
+    cursor.execute("""
+  File "C:\Users\LENOVO\.gemini\antigravity\scratch\codebeginner\database.py", line 252, in execute
+    self._cursor.execute(trans_query, params)
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 
+'review_text'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) 
+could not be prepared. (8180)")
+
+======================================================================
+FAIL: test_02_guest_trial_lesson_view (__main__.SpecFeaturesTestSuite.test_02_guest_trial_lesson_view)
+Ki\u1ec3m tra khßch vπng lai h\u1ecdc th\u1eed bαi h\u1ecdc c≤ g\u1eafn c\u1edd is_trial
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\.gemini\antigravity\brain\14c84320-ff44-4acd-bd31-c8534ebca4ea\scratch\test_spec_features.py", 
+line 41, in test_02_guest_trial_lesson_view
+    self.assertIn('Ch\u1ebf \u0111\u1ed9 xem th\u1eed bαi h\u1ecdc mi\u1ec5n phφ'.encode('utf-8'), res_guest.data)
+AssertionError: b'Ch\xe1\xba\xbf \xc4\x91\xe1\xbb\x99 xem th\xe1\xbb\xad b\xc3\xa0i h\xe1\xbb\x8dc mi\xe1\xbb\x85n 
+ph\xc3\xad' not found in b'<!DOCTYPE html>\n<html lang="vi" class="h-full bg-slate-50">\n<head>\n    <meta 
+charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    
+<title>Gi\xe1\xbb\x9bi thi\xe1\xbb\x87u C++ v\xc3\xa0 C\xe1\xba\xa5u tr\xc3\xbac ch\xc6\xb0\xc6\xa1ng tr\xc3\xacnh 
+chu\xe1\xba\xa9n - C++ C\xc6\xa1 B\xe1\xba\xa3n &amp; N\xe1\xbb\x81n T\xe1\xba\xa3ng Cho Ng\xc6\xb0\xe1\xbb\x9di 
+M\xe1\xbb\x9bi B\xe1\xba\xaft \xc4\x90\xe1\xba\xa7u - CodeBeginner</title>\n\n    <!-- Google Font: Inter -->\n    
+<link rel="preconnect" href="https://fonts.googleapis.com">\n    <link rel="preconnect" 
+href="https://fonts.gstatic.com" crossorigin>\n    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;
+400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">\n\n    <!-- Tailwind CSS 
+CDN -->\n    <script src="https://cdn.tailwindcss.com"></script>\n    <script>\n        tailwind.config = {\n          
+  theme: {\n                extend: {\n                    fontFamily: {\n                        sans: [\'Inter\', 
+\'sans-serif\'],\n                        mono: [\'"JetBrains Mono"\', \'monospace\'],\n                    },\n       
+             colors: {\n                        brand: {\n                            50: \'#eff6ff\',\n               
+             100: \'#dbeafe\',\n                            500: \'#3b82f6\',\n                            600: 
+\'#2563eb\',\n                            700: \'#1d4ed8\',\n                            800: \'#1e40af\',\n           
+                 900: \'#1e3a8a\',\n                        }\n                    }\n                }\n            
+}\n        }\n    </script>\n\n    <!-- Lucide Icons -->\n    <script 
+src="https://unpkg.com/lucide@latest"></script>\n\n    <!-- Chart.js -->\n    <script 
+src="https://cdn.jsdelivr.net/npm/chart.js"></script>\n\n    <!-- CodeMirror (for interactive editor & code viewer) 
+-->\n    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">\n 
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">\n    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>\n    <script 
+src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>\n\n    <style>\n     
+   body { font-family: \'Inter\', sans-serif; }\n        .font-code { font-family: \'JetBrains Mono\', monospace; }\n  
+      .CodeMirror {\n            height: 100%;\n            font-family: \'JetBrains Mono\', monospace;\n            
+font-size: 14px;\n            border-radius: 0.5rem;\n        }\n        /* Custom scrollbar */\n        
+::-webkit-scrollbar { width: 6px; height: 6px; }\n        ::-webkit-scrollbar-track { background: #f1f5f9; }\n        
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }\n        ::-webkit-scrollbar-thumb:hover { 
+background: #94a3b8; }\n    </style>\n    \n</head>\n<body class="flex flex-col min-h-screen text-slate-800 
+antialiased selection:bg-brand-500 selection:text-white">\n\n    <!-- TOP NAVIGATION BAR -->\n    <header 
+class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">\n        <div class="max-w-7xl mx-auto 
+px-4 sm:px-6 lg:px-8">\n            <div class="flex items-center justify-between h-16">\n                \n           
+     <!-- Left: Hamburger & Brand -->\n                <div class="flex items-center gap-3">\n                    
+<button id="sidebar-toggle" type="button" class="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 
+focus:outline-none focus:ring-2 focus:ring-brand-500" aria-label="Menu \xc4\x91i\xe1\xbb\x81u 
+h\xc6\xb0\xe1\xbb\x9bng">\n                        <i data-lucide="menu" class="w-6 h-6"></i>\n                    
+</button>\n                    \n                    <a href="/" class="flex items-center gap-2.5 group">\n            
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center 
+justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">\n                 
+           <i data-lucide="code-2" class="w-6 h-6"></i>\n                        </div>\n                        
+<div>\n                            <span class="text-xl font-bold tracking-tight text-slate-900 
+group-hover:text-brand-600 transition-colors">Code<span class="text-brand-600">Beginner</span></span>\n                
+            <span class="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-wider text-slate-400 
+bg-slate-100 px-1.5 py-0.5 rounded ml-1.5">v2.0</span>\n                        </div>\n                    </a>\n     
+           </div>\n\n                <!-- Center: Quick Nav Links (Desktop) -->\n                <nav class="hidden 
+md:flex items-center gap-1">\n                    <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium 
+text-slate-600 hover:text-brand-600 hover:bg-slate-50 transition-colors">Trang ch\xe1\xbb\xa7</a>\n                    
+<a href="/courses" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-brand-600 
+hover:bg-slate-50 transition-colors">Kh\xc3\xb3a h\xe1\xbb\x8dc</a>\n                    <a href="/exercises" 
+class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-slate-50 
+transition-colors">B\xc3\xa0i t\xe1\xba\xadp</a>\n                    <a href="/entrance-test" class="px-3 py-2 
+rounded-lg text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors flex 
+items-center gap-1">\n                        <i data-lucide="sparkles" class="w-4 h-4"></i> Thi \xc4\x91\xe1\xba\xa7u 
+v\xc3\xa0o\n                    </a>\n                    <a href="/forum" class="px-3 py-2 rounded-lg text-sm 
+font-medium text-slate-600 hover:text-brand-600 hover:bg-slate-50 transition-colors">Di\xe1\xbb\x85n 
+\xc4\x91\xc3\xa0n</a>\n                    <a href="/certificate/verify" class="px-3 py-2 rounded-lg text-sm 
+font-medium text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors flex items-center gap-1">\n        
+                <i data-lucide="badge-check" class="w-4 h-4"></i> Tra c\xe1\xbb\xa9u ch\xe1\xbb\xa9ng ch\xe1\xbb\x89\n 
+                   </a>\n                </nav>\n\n                <!-- Right: Actions & User Info -->\n               
+ <div class="flex items-center gap-3">\n                    \n                        <a href="/login" class="px-4 
+py-2 rounded-lg text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors">\n     
+                       \xc4\x90\xc4\x83ng nh\xe1\xba\xadp\n                        </a>\n                        <a 
+href="/register" class="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 
+shadow-sm shadow-brand-600/30 transition-all">\n                            \xc4\x90\xc4\x83ng k\xc3\xbd 
+mi\xe1\xbb\x85n ph\xc3\xad\n                        </a>\n                    \n                </div>\n\n            
+</div>\n        </div>\n    </header>\n\n    <!-- SIDEBAR DRAWER (\xe2\x98\xb0 Overlay Menu) -->\n    <div 
+id="drawer-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 opacity-0 pointer-events-none 
+transition-opacity duration-300"></div>\n    <aside id="sidebar-drawer" class="fixed top-0 left-0 bottom-0 w-80 
+bg-white z-50 shadow-2xl flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out 
+border-r border-slate-200">\n        \n        <!-- Drawer Header -->\n        <div class="p-5 border-b 
+border-slate-100 flex items-center justify-between">\n            <div class="flex items-center gap-2.5">\n            
+    <div class="w-9 h-9 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold">\n              
+      <i data-lucide="code-2" class="w-5 h-5"></i>\n                </div>\n                <div>\n                    
+<h2 class="font-bold text-slate-900 leading-tight">CodeBeginner</h2>\n                    <p class="text-xs 
+text-slate-400">Menu ch\xe1\xbb\xa9c n\xc4\x83ng h\xe1\xbb\x87 th\xe1\xbb\x91ng</p>\n                </div>\n          
+  </div>\n            <button id="drawer-close" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 
+hover:bg-slate-100">\n                <i data-lucide="x" class="w-5 h-5"></i>\n            </button>\n        
+</div>\n\n        <!-- Drawer Nav Links -->\n        <div class="flex-1 overflow-y-auto p-4 space-y-6">\n            
+\n            <!-- H\xe1\xbb\x8dc vi\xc3\xaan Section -->\n            <div>\n                <p class="px-3 text-xs 
+font-semibold text-slate-400 uppercase tracking-wider mb-2">H\xe1\xbb\x8dc t\xe1\xba\xadp & Luy\xe1\xbb\x87n 
+t\xe1\xba\xadp</p>\n                <div class="space-y-1">\n                    <a href="/" class="flex items-center 
+gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600">\n             
+           <i data-lucide="home" class="w-5 h-5 text-slate-400"></i> Trang ch\xe1\xbb\xa7\n                    </a>\n  
+                  <a href="/courses" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium 
+text-slate-700 hover:bg-slate-50 hover:text-brand-600">\n                        <i data-lucide="book-open" class="w-5 
+h-5 text-slate-400"></i> Kh\xc3\xb3a h\xe1\xbb\x8dc l\xe1\xba\xadp tr\xc3\xacnh\n                    </a>\n            
+        <a href="/exercises" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 
+hover:bg-slate-50 hover:text-brand-600">\n                        <i data-lucide="terminal" class="w-5 h-5 
+text-slate-400"></i> Ng\xc3\xa2n h\xc3\xa0ng b\xc3\xa0i t\xe1\xba\xadp\n                    </a>\n                    
+<a href="/entrance-test" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-emerald-700 
+bg-emerald-50/70 hover:bg-emerald-100">\n                        <i data-lucide="sparkles" class="w-5 h-5 
+text-emerald-600"></i> Ki\xe1\xbb\x83m tra \xc4\x91\xe1\xba\xa7u v\xc3\xa0o & Ph\xc3\xa2n lo\xe1\xba\xa1i\n            
+        </a>\n                    <a href="/weakness-analysis" class="flex items-center gap-3 px-3 py-2.5 rounded-lg 
+text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600">\n                        <i 
+data-lucide="activity" class="w-5 h-5 text-slate-400"></i> Ph\xc3\xa2n t\xc3\xadch \xc4\x91i\xe1\xbb\x83m 
+y\xe1\xba\xbfu & L\xe1\xbb\x99 tr\xc3\xacnh\n                    </a>\n                    <a href="/progress" 
+class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 
+hover:text-brand-600">\n                        <i data-lucide="trending-up" class="w-5 h-5 text-slate-400"></i> 
+Ti\xe1\xba\xbfn \xc4\x91\xe1\xbb\x99 c\xe1\xbb\xa7a t\xc3\xb4i\n                    </a>\n                    <a 
+href="/forum" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 
+hover:bg-slate-50 hover:text-brand-600">\n                        <i data-lucide="messages-square" class="w-5 h-5 
+text-slate-400"></i> Di\xe1\xbb\x85n \xc4\x91\xc3\xa0n h\xe1\xbb\x8fi \xc4\x91\xc3\xa1p\n                    </a>\n    
+            </div>\n            </div>\n\n            <!-- Vai tr\xc3\xb2 Chuy\xc3\xaan gia (N\xe1\xba\xbfu l\xc3\xa0 
+Expert ho\xe1\xba\xb7c Admin) -->\n            \n            <!-- Vai tr\xc3\xb2 Ki\xe1\xbb\x83m duy\xe1\xbb\x87t 
+vi\xc3\xaan (N\xe1\xba\xbfu l\xc3\xa0 Moderator ho\xe1\xba\xb7c Admin) -->\n            \n\n            \n\n           
+ <!-- Vai tr\xc3\xb2 Admin (N\xe1\xba\xbfu l\xc3\xa0 Admin) -->\n            \n\n        </div>\n\n        <!-- Drawer 
+Footer -->\n        <div class="p-4 border-t border-slate-100 bg-slate-50">\n            \n                <div 
+class="grid grid-cols-2 gap-2">\n                    <a href="/login" class="px-3 py-2 text-center text-xs 
+font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100">\xc4\x90\xc4\x83ng 
+nh\xe1\xba\xadp</a>\n                    <a href="/register" class="px-3 py-2 text-center text-xs font-semibold 
+text-white bg-brand-600 rounded-lg hover:bg-brand-700">\xc4\x90\xc4\x83ng k\xc3\xbd</a>\n                </div>\n      
+      \n        </div>\n    </aside>\n\n    <!-- FLASH MESSAGES / TOAST NOTIFICATIONS -->\n    <div class="max-w-7xl 
+mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">\n        \n            \n                <div class="space-y-2">\n          
+          \n                        <div class="flex items-center justify-between p-4 rounded-xl border shadow-sm 
+transition-all\n                            bg-sky-50 border-sky-200 text-sky-800" role="alert">\n                     
+       <div class="flex items-center gap-3">\n                                <i data-lucide="info" class="w-5 h-5 
+text-sky-600"></i>\n                                <span class="text-sm font-medium">B\xe1\xba\xa1n \xc4\x91\xc3\xa3 
+\xc4\x91\xc4\x83ng xu\xe1\xba\xa5t an to\xc3\xa0n.</span>\n                            </div>\n                        
+    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-700">\n                       
+         <i data-lucide="x" class="w-4 h-4"></i>\n                            </button>\n                        
+</div>\n                    \n                </div>\n            \n        \n    </div>\n\n    <!-- MAIN BODY CONTENT 
+-->\n    <main class="flex-1">\n        \n<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">\n    \n    <!-- 
+Breadcrumb & Top Bar -->\n    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b 
+border-slate-200 gap-4">\n        <div>\n            <div class="flex items-center gap-2 text-xs text-slate-500 
+mb-1">\n                <a href="/courses" class="hover:text-brand-600">Kh\xc3\xb3a h\xe1\xbb\x8dc</a>\n               
+ <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>\n                <a href="/courses/1" 
+class="hover:text-brand-600 truncate max-w-xs">C++ C\xc6\xa1 B\xe1\xba\xa3n &amp; N\xe1\xbb\x81n T\xe1\xba\xa3ng Cho 
+Ng\xc6\xb0\xe1\xbb\x9di M\xe1\xbb\x9bi B\xe1\xba\xaft \xc4\x90\xe1\xba\xa7u</a>\n                <i 
+data-lucide="chevron-right" class="w-3.5 h-3.5"></i>\n                <span class="text-slate-800 
+font-semibold">Ch\xc6\xb0\xc6\xa1ng 1: Kh\xe1\xbb\x9fi \xc4\x91\xe1\xbb\x99ng v\xe1\xbb\x9bi L\xe1\xba\xadp 
+tr\xc3\xacnh &amp; C++</span>\n            </div>\n            <h1 class="text-2xl font-extrabold text-slate-900 
+tracking-tight">Gi\xe1\xbb\x9bi thi\xe1\xbb\x87u C++ v\xc3\xa0 C\xe1\xba\xa5u tr\xc3\xbac ch\xc6\xb0\xc6\xa1ng 
+tr\xc3\xacnh chu\xe1\xba\xa9n</h1>\n        </div>\n\n        <!-- Mark Complete Toggle Button -->\n        <button 
+id="btn-toggle-complete" data-lesson-id="1"\n                class="px-4 py-2.5 rounded-xl font-bold text-xs flex 
+items-center gap-2 transition-all shadow-sm\n                bg-white border border-slate-300 text-slate-700 
+hover:bg-slate-50">\n            <i data-lucide="circle" class="w-4 h-4"></i>\n            <span 
+id="complete-status-text">\xc4\x90\xc3\xa1nh d\xe1\xba\xa5u ho\xc3\xa0n th\xc3\xa0nh</span>\n        </button>\n    
+</div>\n\n    <!-- 2-Column Study Layout -->\n    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">\n        \n     
+   <!-- Left: Syllabus Table of Contents (3 cols) -->\n        <div class="lg:col-span-4 order-2 lg:order-1">\n        
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm sticky top-24 max-h-[80vh] flex 
+flex-col">\n                <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center justify-between">\n     
+               <span>M\xe1\xbb\xa5c l\xe1\xbb\xa5c b\xc3\xa0i h\xe1\xbb\x8dc</span>\n                    <span 
+class="text-xs font-normal text-slate-400">5 b\xc3\xa0i</span>\n                </h3>\n\n                <div 
+class="space-y-1 overflow-y-auto flex-1 pr-1 divide-y divide-slate-100">\n                    \n                    <a 
+href="/lessons/1"\n                       class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs 
+transition-colors\n                       bg-brand-50 text-brand-700 font-bold border border-brand-200\n               
+        ">\n                        <div class="flex items-center gap-2.5 truncate">\n                            \n   
+                             <i data-lucide="file-text" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>\n            
+                \n                            <span class="truncate">1. Gi\xe1\xbb\x9bi thi\xe1\xbb\x87u C++ v\xc3\xa0 
+C\xe1\xba\xa5u tr\xc3\xbac ch\xc6\xb0\xc6\xa1ng tr\xc3\xacnh chu\xe1\xba\xa9n</span>\n                        </div>\n 
+                       \n                            <span class="w-2 h-2 rounded-full bg-brand-600 
+flex-shrink-0"></span>\n                        \n                    </a>\n                    \n                    
+<a href="/lessons/2"\n                       class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs 
+transition-colors\n                       text-slate-600 hover:bg-slate-50 hover:text-slate-900">\n                    
+    <div class="flex items-center gap-2.5 truncate">\n                            \n                                <i 
+data-lucide="file-text" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>\n                            \n              
+              <span class="truncate">2. Bi\xe1\xba\xbfn, Ki\xe1\xbb\x83u d\xe1\xbb\xaf li\xe1\xbb\x87u v\xc3\xa0 
+Nh\xe1\xba\xadp/Xu\xe1\xba\xa5t trong C++</span>\n                        </div>\n                        \n           
+         </a>\n                    \n                    <a href="/lessons/3"\n                       class="flex 
+items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors\n                       text-slate-600 
+hover:bg-slate-50 hover:text-slate-900">\n                        <div class="flex items-center gap-2.5 truncate">\n   
+                         \n                                <i data-lucide="file-text" class="w-4 h-4 text-slate-400 
+flex-shrink-0"></i>\n                            \n                            <span class="truncate">3. C\xc3\xa2u 
+l\xe1\xbb\x87nh \xc4\x91i\xe1\xbb\x81u ki\xe1\xbb\x87n If - Else &amp; To\xc3\xa1n t\xe1\xbb\xad so 
+s\xc3\xa1nh</span>\n                        </div>\n                        \n                    </a>\n               
+     \n                    <a href="/lessons/4"\n                       class="flex items-center justify-between px-3 
+py-2.5 rounded-xl text-xs transition-colors\n                       text-slate-600 hover:bg-slate-50 
+hover:text-slate-900">\n                        <div class="flex items-center gap-2.5 truncate">\n                     
+       \n                                <i data-lucide="file-text" class="w-4 h-4 text-slate-400 
+flex-shrink-0"></i>\n                            \n                            <span class="truncate">4. V\xc3\xb2ng 
+l\xe1\xba\xb7p For, While v\xc3\xa0 Do-While</span>\n                        </div>\n                        \n        
+            </a>\n                    \n                    <a href="/lessons/5"\n                       class="flex 
+items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors\n                       text-slate-600 
+hover:bg-slate-50 hover:text-slate-900">\n                        <div class="flex items-center gap-2.5 truncate">\n   
+                         \n                                <i data-lucide="file-text" class="w-4 h-4 text-slate-400 
+flex-shrink-0"></i>\n                            \n                            <span class="truncate">5. H\xc3\xa0m 
+(Function) v\xc3\xa0 T\xe1\xbb\x95 ch\xe1\xbb\xa9c ch\xc6\xb0\xc6\xa1ng tr\xc3\xacnh</span>\n                        
+</div>\n                        \n                    </a>\n                    \n                </div>\n            
+</div>\n        </div>\n\n        <!-- Right: Main Lesson Content (8 cols) -->\n        <div class="lg:col-span-8 
+order-1 lg:order-2 space-y-8">\n            \n            <!-- Theory Content -->\n            <div class="bg-white 
+rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">\n                <div>\n                    <h2 
+class="text-xs font-bold uppercase tracking-wider text-brand-600 mb-2">1. L\xc3\xbd thuy\xe1\xba\xbft & Kh\xc3\xa1i 
+ni\xe1\xbb\x87m</h2>\n                    <div class="text-sm text-slate-700 leading-relaxed space-y-3 
+whitespace-pre-line font-normal">\n                        C++ l\xc3\xa0 ng\xc3\xb4n ng\xe1\xbb\xaf l\xe1\xba\xadp 
+tr\xc3\xacnh \xc4\x91a n\xe1\xbb\x81n t\xe1\xba\xa3ng m\xe1\xba\xa1nh m\xe1\xba\xbd \xc4\x91\xc6\xb0\xe1\xbb\xa3c 
+ph\xc3\xa1t tri\xe1\xbb\x83n b\xe1\xbb\x9fi Bjarne Stroustrup t\xe1\xbb\xab n\xc4\x83m 1979 t\xe1\xba\xa1i Bell Labs. 
+C++ k\xe1\xba\xbft h\xe1\xbb\xa3p c\xe1\xba\xa3 \xc4\x91\xe1\xba\xb7c t\xc3\xadnh h\xc6\xb0\xe1\xbb\x9bng 
+th\xe1\xbb\xa7 t\xe1\xbb\xa5c v\xc3\xa0 h\xc6\xb0\xe1\xbb\x9bng \xc4\x91\xe1\xbb\x91i t\xc6\xb0\xe1\xbb\xa3ng, cho 
+ph\xc3\xa9p qu\xe1\xba\xa3n l\xc3\xbd b\xe1\xbb\x99 nh\xe1\xbb\x9b tr\xe1\xbb\xb1c ti\xe1\xba\xbfp v\xc3\xa0 
+\xc4\x91\xe1\xba\xa1t hi\xe1\xbb\x87u n\xc4\x83ng t\xe1\xbb\x91i \xc4\x91a trong ph\xc3\xa1t tri\xe1\xbb\x83n 
+h\xe1\xbb\x87 th\xe1\xbb\x91ng, tr\xc3\xb2 ch\xc6\xa1i v\xc3\xa0 thu\xe1\xba\xadt to\xc3\xa1n thi 
+\xc4\x91\xe1\xba\xa5u.\n                    </div>\n                </div>\n\n                <!-- Syntax Guide -->\n  
+              \n                <div class="bg-slate-900 rounded-xl p-5 text-slate-100 font-code text-xs">\n           
+         <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800 text-slate-400 font-sans 
+text-[11px]">\n                        <span class="flex items-center gap-1.5"><i data-lucide="code" class="w-3.5 
+h-3.5 text-brand-400"></i> C\xc3\xba ph\xc3\xa1p chu\xe1\xba\xa9n (Syntax)</span>\n                    </div>\n        
+            <pre class="overflow-x-auto text-amber-300"><code>#include &lt;iostream&gt;\nusing namespace std;\n\nint 
+main() {\n    // Kh\xe1\xbb\x91i m\xc3\xa3 l\xe1\xbb\x87nh \xe1\xbb\x9f \xc4\x91\xc3\xa2y\n    return 
+0;\n}</code></pre>\n                </div>\n                \n\n                <!-- Code Example -->\n                
+\n                <div>\n                    <h2 class="text-xs font-bold uppercase tracking-wider text-brand-600 
+mb-2">2. V\xc3\xad d\xe1\xbb\xa5 minh h\xe1\xbb\x8da th\xe1\xbb\xb1c t\xe1\xba\xbf</h2>\n                    <div 
+class="bg-slate-900 rounded-xl overflow-hidden shadow-md border border-slate-800">\n                        <div 
+class="bg-slate-950 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 
+font-sans">\n                            <span class="font-mono text-emerald-400">example.cpp</span>\n                 
+           <button onclick="copyCode(this)" class="flex items-center gap-1 hover:text-white transition-colors">\n      
+                          <i data-lucide="copy" class="w-3.5 h-3.5"></i> Sao ch\xc3\xa9p code\n                        
+    </button>\n                        </div>\n                        <pre id="code-example-block" class="p-4 text-xs 
+font-code text-emerald-300 overflow-x-auto"><code>#include &lt;iostream&gt;\nusing namespace std;\n\nint main() {\n    
+cout &lt;&lt; &#34;Chao mung den voi CodeBeginner!&#34; &lt;&lt; endl;\n    return 0;\n}</code></pre>\n                
+    </div>\n                </div>\n                \n\n                <!-- Expected Output -->\n                \n   
+             <div>\n                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 
+mb-2">K\xe1\xba\xbft qu\xe1\xba\xa3 xu\xe1\xba\xa5t ra m\xc3\xa0n h\xc3\xacnh (Output)</h2>\n                    <div 
+class="bg-slate-100 rounded-xl p-4 border border-slate-200 font-code text-xs text-slate-800 whitespace-pre-line">\n    
+                    Chao mung den voi CodeBeginner!\n                    </div>\n                </div>\n              
+  \n            </div>\n\n            <!-- Quick Quiz Section -->\n            \n            <div class="bg-white 
+rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">\n                <h3 class="text-base font-bold 
+text-slate-900 mb-4 flex items-center gap-2">\n                    <i data-lucide="help-circle" class="w-5 h-5 
+text-indigo-600"></i> C\xc3\xa2u h\xe1\xbb\x8fi ki\xe1\xbb\x83m tra nhanh ki\xe1\xba\xbfn th\xe1\xbb\xa9c\n            
+    </h3>\n\n                <div class="space-y-6">\n                    \n                    <div class="quiz-item 
+p-4 rounded-xl bg-slate-50 border border-slate-200" data-correct="1">\n                        <p class="text-sm 
+font-semibold text-slate-800 mb-3">1. L\xe1\xbb\x87nh n\xc3\xa0o sau \xc4\x91\xc3\xa2y d\xc3\xb9ng 
+\xc4\x91\xe1\xbb\x83 xu\xe1\xba\xa5t d\xe1\xbb\xaf li\xe1\xbb\x87u ra m\xc3\xa0n h\xc3\xacnh trong C++?</p>\n          
+              <div class="space-y-2">\n                            \n                            <label class="flex 
+items-center gap-3 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 cursor-pointer text-xs 
+font-medium text-slate-700 transition-colors">\n                                <input type="radio" name="quiz_0" 
+value="0" class="w-4 h-4 text-brand-600 focus:ring-brand-500">\n                                <span>cin</span>\n     
+                       </label>\n                            \n                            <label class="flex 
+items-center gap-3 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 cursor-pointer text-xs 
+font-medium text-slate-700 transition-colors">\n                                <input type="radio" name="quiz_1" 
+value="1" class="w-4 h-4 text-brand-600 focus:ring-brand-500">\n                                <span>cout</span>\n    
+                        </label>\n                            \n                            <label class="flex 
+items-center gap-3 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 cursor-pointer text-xs 
+font-medium text-slate-700 transition-colors">\n                                <input type="radio" name="quiz_2" 
+value="2" class="w-4 h-4 text-brand-600 focus:ring-brand-500">\n                                
+<span>printf_s</span>\n                            </label>\n                            \n                            
+<label class="flex items-center gap-3 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 
+cursor-pointer text-xs font-medium text-slate-700 transition-colors">\n                                <input 
+type="radio" name="quiz_3" value="3" class="w-4 h-4 text-brand-600 focus:ring-brand-500">\n                            
+    <span>output</span>\n                            </label>\n                            \n                        
+</div>\n                        <div class="mt-3 flex items-center justify-between">\n                            
+<button type="button" onclick="checkQuiz(this)" class="px-4 py-1.5 rounded-lg text-xs font-bold text-white 
+bg-indigo-600 hover:bg-indigo-700 transition-colors">\n                                Ki\xe1\xbb\x83m tra 
+\xc4\x91\xc3\xa1p \xc3\xa1n\n                            </button>\n                            <span 
+class="quiz-feedback text-xs font-bold hidden"></span>\n                        </div>\n                        <div 
+class="quiz-explanation mt-3 text-xs text-slate-600 bg-white p-3 rounded-lg border border-slate-200 hidden">\n         
+                   <strong class="text-slate-800">Gi\xe1\xba\xa3i th\xc3\xadch:</strong> cout k\xe1\xba\xbft 
+h\xe1\xbb\xa3p to\xc3\xa1n t\xe1\xbb\xad &lt;&lt; \xc4\x91\xc6\xb0\xe1\xbb\xa3c d\xc3\xb9ng \xc4\x91\xe1\xbb\x83 in 
+th\xc3\xb4ng tin ra m\xc3\xa0n h\xc3\xacnh.\n                        </div>\n                    </div>\n              
+      \n                </div>\n            </div>\n            \n\n            <!-- Related Practice Exercises -->\n  
+          \n\n            <!-- Navigation Buttons (Prev / Next) -->\n            <div class="flex items-center 
+justify-between pt-4">\n                \n                <div></div>\n                \n\n                \n          
+      <a href="/lessons/2" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 
+flex items-center gap-2 transition-colors shadow-sm">\n                    B\xc3\xa0i ti\xe1\xba\xbfp theo <i 
+data-lucide="arrow-right" class="w-4 h-4"></i>\n                </a>\n                \n            </div>\n\n        
+</div>\n\n    </div>\n\n</div>\n\n    </main>\n\n    <!-- FOOTER -->\n    <footer class="bg-white border-t 
+border-slate-200 mt-16">\n        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">\n            <div 
+class="grid grid-cols-1 md:grid-cols-4 gap-8">\n                <!-- Col 1 -->\n                <div 
+class="space-y-3">\n                    <div class="flex items-center gap-2">\n                        <div class="w-8 
+h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold">\n                            <i 
+data-lucide="code-2" class="w-5 h-5"></i>\n                        </div>\n                        <span 
+class="text-lg font-bold text-slate-900">Code<span class="text-brand-600">Beginner</span></span>\n                    
+</div>\n                    <p class="text-xs text-slate-500 leading-relaxed">\n                        H\xe1\xbb\x87 
+th\xe1\xbb\x91ng h\xe1\xbb\x97 tr\xe1\xbb\xa3 h\xe1\xbb\x8dc v\xc3\xa0 luy\xe1\xbb\x87n t\xe1\xba\xadp l\xe1\xba\xadp 
+tr\xc3\xacnh C++ t\xe1\xbb\xab c\xc6\xa1 b\xe1\xba\xa3n \xc4\x91\xe1\xba\xbfn n\xc3\xa2ng cao tr\xc3\xaan 
+n\xe1\xbb\x81n t\xe1\xba\xa3ng Web. T\xc3\xadch h\xe1\xbb\xa3p b\xc3\xa0i ki\xe1\xbb\x83m tra \xc4\x91\xe1\xba\xa7u 
+v\xc3\xa0o, ch\xe1\xba\xa5m m\xc3\xa3 ngu\xe1\xbb\x93n an to\xc3\xa0n v\xc3\xa0 ph\xc3\xa2n t\xc3\xadch 
+\xc4\x91i\xe1\xbb\x83m y\xe1\xba\xbfu h\xe1\xbb\x8dc t\xe1\xba\xadp.\n                    </p>\n                
+</div>\n\n                <!-- Col 2 -->\n                <div>\n                    <h4 class="text-xs font-semibold 
+text-slate-900 uppercase tracking-wider mb-3">L\xe1\xbb\x99 tr\xc3\xacnh h\xe1\xbb\x8dc</h4>\n                    <ul 
+class="space-y-2 text-xs text-slate-600">\n                        <li><a href="/courses" 
+class="hover:text-brand-600">C++ C\xc6\xa1 b\xe1\xba\xa3n cho ng\xc6\xb0\xe1\xbb\x9di m\xe1\xbb\x9bi</a></li>\n        
+                <li><a href="/courses" class="hover:text-brand-600">C\xe1\xba\xa5u tr\xc3\xbac d\xe1\xbb\xaf 
+li\xe1\xbb\x87u & Thu\xe1\xba\xadt to\xc3\xa1n</a></li>\n                        <li><a href="/entrance-test" 
+class="hover:text-brand-600">Ki\xe1\xbb\x83m tra \xc4\x91\xe1\xba\xa7u v\xc3\xa0o x\xc3\xa1c \xc4\x91\xe1\xbb\x8bnh 
+tr\xc3\xacnh \xc4\x91\xe1\xbb\x99</a></li>\n                        <li><a href="/exercises" 
+class="hover:text-brand-600">Ng\xc3\xa2n h\xc3\xa0ng b\xc3\xa0i t\xe1\xba\xadp th\xe1\xbb\xb1c h\xc3\xa0nh</a></li>\n  
+                  </ul>\n                </div>\n\n                <!-- Col 3 -->\n                <div>\n             
+       <h4 class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-3">C\xe1\xbb\x99ng 
+\xc4\x91\xe1\xbb\x93ng & H\xe1\xbb\x97 tr\xe1\xbb\xa3</h4>\n                    <ul class="space-y-2 text-xs 
+text-slate-600">\n                        <li><a href="/forum" class="hover:text-brand-600">Di\xe1\xbb\x85n 
+\xc4\x91\xc3\xa0n th\xe1\xba\xa3o lu\xe1\xba\xadn</a></li>\n                        <li><a href="/forum/category/cpp" 
+class="hover:text-brand-600">H\xe1\xbb\x8fi \xc4\x91\xc3\xa1p C++</a></li>\n                        <li><a 
+href="/forum/category/algorithms" class="hover:text-brand-600">H\xe1\xbb\x8fi \xc4\x91\xc3\xa1p Gi\xe1\xba\xa3i 
+thu\xe1\xba\xadt</a></li>\n                        <li><a href="#" class="hover:text-brand-600">Quy t\xe1\xba\xafc 
+\xe1\xbb\xa9ng x\xe1\xbb\xad c\xe1\xbb\x99ng \xc4\x91\xe1\xbb\x93ng</a></li>\n                    </ul>\n              
+  </div>\n\n                <!-- Col 4 -->\n                <div>\n                    <h4 class="text-xs 
+font-semibold text-slate-900 uppercase tracking-wider mb-3">Th\xc3\xb4ng tin h\xe1\xbb\x87 th\xe1\xbb\x91ng</h4>\n     
+               <div class="text-xs text-slate-500 space-y-1.5">\n                        <p>Tr\xc3\xacnh bi\xc3\xaan 
+d\xe1\xbb\x8bch: <span class="font-semibold text-slate-700">GCC 10.3 (C++17)</span></p>\n                        
+<p>Th\xe1\xbb\x9di gian ch\xe1\xba\xa1y t\xe1\xbb\x91i \xc4\x91a: <span class="font-semibold text-slate-700">2.0s / 
+test case</span></p>\n                        <p>Sandbox c\xc3\xa1ch ly an to\xc3\xa0n: <span class="text-emerald-600 
+font-semibold">Active</span></p>\n                        <p class="pt-2 text-slate-400">\xc2\xa9 2026 CodeBeginner 
+Platform.</p>\n                    </div>\n                </div>\n            </div>\n        </div>\n    
+</footer>\n\n    <!-- Global Scripts -->\n    <script>\n        // Init Lucide Icons\n        
+lucide.createIcons();\n\n        // Drawer Sidebar Toggle\n        const sidebarToggle = 
+document.getElementById(\'sidebar-toggle\');\n        const sidebarDrawer = 
+document.getElementById(\'sidebar-drawer\');\n        const drawerBackdrop = 
+document.getElementById(\'drawer-backdrop\');\n        const drawerClose = 
+document.getElementById(\'drawer-close\');\n\n        function openDrawer() {\n            
+sidebarDrawer.classList.remove(\'-translate-x-full\');\n            drawerBackdrop.classList.remove(\'opacity-0\', 
+\'pointer-events-none\');\n        }\n\n        function closeDrawer() {\n            
+sidebarDrawer.classList.add(\'-translate-x-full\');\n            drawerBackdrop.classList.add(\'opacity-0\', 
+\'pointer-events-none\');\n        }\n\n        if (sidebarToggle) sidebarToggle.addEventListener(\'click\', 
+openDrawer);\n        if (drawerClose) drawerClose.addEventListener(\'click\', closeDrawer);\n        if 
+(drawerBackdrop) drawerBackdrop.addEventListener(\'click\', closeDrawer);\n\n        // User Profile Dropdown Toggle\n 
+       function toggleUserMenu(event) {\n            if (event) {\n                event.stopPropagation();\n          
+  }\n            const dropdown = document.getElementById(\'user-menu-dropdown\');\n            const button = 
+document.getElementById(\'user-menu-button\');\n            if (dropdown) {\n                const isHidden = 
+dropdown.classList.contains(\'hidden\');\n                if (isHidden) {\n                    
+dropdown.classList.remove(\'hidden\');\n                    if (button) button.setAttribute(\'aria-expanded\', 
+\'true\');\n                } else {\n                    dropdown.classList.add(\'hidden\');\n                    if 
+(button) button.setAttribute(\'aria-expanded\', \'false\');\n                }\n            }\n        }\n\n        // 
+Close user dropdown when clicking outside\n        document.addEventListener(\'click\', function(event) {\n            
+const dropdown = document.getElementById(\'user-menu-dropdown\');\n            const button = 
+document.getElementById(\'user-menu-button\');\n            if (dropdown && !dropdown.classList.contains(\'hidden\')) 
+{\n                if (!dropdown.contains(event.target) && (!button || !button.contains(event.target))) {\n            
+        dropdown.classList.add(\'hidden\');\n                    if (button) button.setAttribute(\'aria-expanded\', 
+\'false\');\n                }\n            }\n        });\n    </script>\n    \n<script>\n    // Copy code snippet\n  
+  function copyCode(btn) {\n        const codeText = document.getElementById(\'code-example-block\').innerText;\n      
+  navigator.clipboard.writeText(codeText).then(() => {\n            const originalHTML = btn.innerHTML;\n            
+btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> \xc4\x90\xc3\xa3 sao 
+ch\xc3\xa9p!`;\n            lucide.createIcons();\n            setTimeout(() => {\n                btn.innerHTML = 
+originalHTML;\n                lucide.createIcons();\n            }, 2000);\n        });\n    }\n\n    // Toggle 
+lesson completed status\n    const btnComplete = document.getElementById(\'btn-toggle-complete\');\n    if 
+(btnComplete) {\n        btnComplete.addEventListener(\'click\', async () => {\n            const lessonId = 
+btnComplete.dataset.lessonId;\n            try {\n                const res = await 
+fetch(`/api/lessons/${lessonId}/toggle-complete`, { method: \'POST\' });\n                const data = await 
+res.json();\n                if (data.success) {\n                    const textSpan = 
+document.getElementById(\'complete-status-text\');\n                    if (data.completed) {\n                        
+btnComplete.className = \'px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm 
+bg-emerald-600 text-white hover:bg-emerald-700\';\n                        textSpan.textContent = \'\xc4\x90\xc3\xa3 
+ho\xc3\xa0n th\xc3\xa0nh\';\n                    } else {\n                        btnComplete.className = \'px-4 
+py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm bg-white border border-slate-300 
+text-slate-700 hover:bg-slate-50\';\n                        textSpan.textContent = \'\xc4\x90\xc3\xa1nh 
+d\xe1\xba\xa5u ho\xc3\xa0n th\xc3\xa0nh\';\n                    }\n                }\n            } catch (err) {\n    
+            console.error(err);\n            }\n        });\n    }\n\n    // Check quick quiz answer\n    function 
+checkQuiz(btn) {\n        const item = btn.closest(\'.quiz-item\');\n        const correct = 
+parseInt(item.dataset.correct);\n        const selected = item.querySelector(\'input[type="radio"]:checked\');\n       
+ const feedback = item.querySelector(\'.quiz-feedback\');\n        const explanation = 
+item.querySelector(\'.quiz-explanation\');\n\n        if (!selected) {\n            alert(\'Vui l\xc3\xb2ng 
+ch\xe1\xbb\x8dn m\xe1\xbb\x99t \xc4\x91\xc3\xa1p \xc3\xa1n tr\xc6\xb0\xe1\xbb\x9bc khi ki\xe1\xbb\x83m tra!\');\n      
+      return;\n        }\n\n        const chosenVal = parseInt(selected.value);\n        
+feedback.classList.remove(\'hidden\');\n        explanation.classList.remove(\'hidden\');\n\n        if (chosenVal === 
+correct) {\n            feedback.textContent = \'Ch\xc3\xadnh x\xc3\xa1c! R\xe1\xba\xa5t t\xe1\xbb\x91t.\';\n          
+  feedback.className = \'quiz-feedback text-xs font-bold text-emerald-600\';\n        } else {\n            
+feedback.textContent = \'Ch\xc6\xb0a ch\xc3\xadnh x\xc3\xa1c! Xem gi\xe1\xba\xa3i th\xc3\xadch b\xc3\xaan 
+d\xc6\xb0\xe1\xbb\x9bi.\';\n            feedback.className = \'quiz-feedback text-xs font-bold text-rose-600\';\n      
+  }\n    }\n</script>\n\n</body>\n</html>'
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.433s
+
+FAILED (failures=1, errors=4)

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Bài tập - Chuyên gia - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <a href="{{ url_for('expert_dashboard') }}" class="hover:text-amber-600">Dashboard Chuyên gia</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span class="text-slate-800 font-semibold">Bài tập</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Quản lý Ngân hàng Bài tập</h1>
+            <p class="text-xs text-slate-500 mt-1">Danh sách toàn bộ bài tập lập trình, quản lý bộ test case và trạng thái phê duyệt.</p>
+        </div>
+
+        <a href="{{ url_for('expert_exercise_create') }}" class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-amber-600 hover:bg-amber-700 shadow-md shadow-amber-600/20 flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> Tạo bài tập mới
+        </a>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm text-slate-600">
+                <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-4">Mã</th>
+                        <th class="px-6 py-4">Tên bài tập</th>
+                        <th class="px-6 py-4">Chủ đề</th>
+                        <th class="px-6 py-4">Độ khó</th>
+                        <th class="px-6 py-4">Điểm</th>
+                        <th class="px-6 py-4">Test Cases</th>
+                        <th class="px-6 py-4">Trạng thái</th>
+                        <th class="px-6 py-4 text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% for ex in exercises %}
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 font-mono text-slate-400">#{{ ex.id }}</td>
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-slate-900 block">{{ ex.title }}</span>
+                            <span class="text-[11px] text-slate-400">{{ ex.course_title or 'Chưa gắn khóa học' }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">{{ ex.topic }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold
+                                {% if ex.difficulty == 'Dễ' %}bg-emerald-100 text-emerald-700
+                                {% elif ex.difficulty == 'Trung bình' %}bg-amber-100 text-amber-700
+                                {% else %}bg-rose-100 text-rose-700{% endif %}">
+                                {{ ex.difficulty }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-bold text-slate-800">{{ ex.points }} đ</td>
+                        <td class="px-6 py-4">
+                            <a href="{{ url_for('expert_testcases', exercise_id=ex.id) }}" class="inline-flex items-center gap-1 font-bold text-brand-600 hover:underline">
+                                <i data-lucide="list-checks" class="w-3.5 h-3.5"></i> {{ ex.test_case_count }} tests
+                            </a>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold
+                                {% if ex.status == 'approved' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+                                {% elif ex.status == 'pending' %}bg-amber-50 text-amber-700 border border-amber-200
+                                {% else %}bg-slate-100 text-slate-600{% endif %}">
+                                {{ ex.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ url_for('expert_testcases', exercise_id=ex.id) }}" class="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100" title="Cấu hình Test case">
+                                    <i data-lucide="settings" class="w-4 h-4"></i>
+                                </a>
+                                <a href="{{ url_for('expert_exercise_edit', exercise_id=ex.id) }}" class="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100" title="Chỉnh sửa bài tập">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                </a>
+                                <a href="{{ url_for('exercise_detail', exercise_id=ex.id) }}" target="_blank" class="p-1.5 rounded-lg text-brand-600 hover:bg-brand-50" title="Xem giao diện làm bài">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

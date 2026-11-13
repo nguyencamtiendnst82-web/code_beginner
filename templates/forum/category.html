@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Chuyên mục {{ category.name }} - Diễn đàn CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="mb-8">
+        <a href="{{ url_for('forum_index') }}" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1 mb-2">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Quay lại diễn đàn
+        </a>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                    <i data-lucide="{{ category.icon }}" class="w-7 h-7 text-brand-600"></i> {{ category.name }}
+                </h1>
+                <p class="text-slate-500 text-sm mt-1">{{ category.description }}</p>
+            </div>
+            <a href="{{ url_for('forum_create_thread') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-sm flex items-center gap-2">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Đặt câu hỏi trong mục này
+            </a>
+        </div>
+    </div>
+
+    <!-- Threads in Category -->
+    {% if threads %}
+    <div class="space-y-4">
+        {% for t in threads %}
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-all flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-slate-400">{{ t.created_at[:16] }}</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 hover:text-brand-600 transition-colors mb-2">
+                    <a href="{{ url_for('forum_thread_detail', thread_id=t.id) }}">{{ t.title }}</a>
+                </h3>
+                <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">{{ t.content }}</p>
+                {% if t.tags %}
+                <div class="flex flex-wrap gap-1.5 mb-3">
+                    {% for tag in t.tags.split(',') %}
+                    <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium">#{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-[10px]">
+                        {{ t.author_name[:1].upper() }}
+                    </div>
+                    <span class="font-medium text-slate-700">{{ t.author_name }}</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5 text-slate-400"></i> {{ t.views_count }}</span>
+                    <span class="flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3.5 h-3.5 text-slate-400"></i> {{ t.like_count }}</span>
+                    <span class="flex items-center gap-1 font-bold text-brand-600"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> {{ t.reply_count }} trả lời</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+        <i data-lucide="message-circle-off" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i>
+        <h4 class="font-bold text-slate-800 text-sm">Chưa có bài viết nào trong chuyên mục này</h4>
+        <p class="text-xs text-slate-500 mt-1 mb-4">Hãy là người đầu tiên đặt câu hỏi nhé!</p>
+        <a href="{{ url_for('forum_create_thread') }}" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-brand-600">Đặt câu hỏi ngay</a>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

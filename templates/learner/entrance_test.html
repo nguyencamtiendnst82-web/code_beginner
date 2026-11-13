@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Kiểm tra đầu vào xác định năng lực - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Test Header & Intro -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+            <div>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold mb-2">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Đánh giá năng lực tự động
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Bài kiểm tra kiến thức đầu vào C++</h1>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+                    Bài kiểm tra gồm 15 câu hỏi trắc nghiệm bao quát 8 chủ đề lập trình cốt lõi: Biến, Nhập xuất, Toán tử, If/Else, Vòng lặp, Mảng, Chuỗi và Hàm. Kết quả sẽ giúp hệ thống chỉ ra cụ thể kiến thức còn yếu và đề xuất lộ trình học phù hợp nhất cho bạn.
+                </p>
+            </div>
+
+            <!-- Timer Widget -->
+            <div class="flex-shrink-0 bg-slate-900 text-white px-5 py-4 rounded-2xl shadow-md text-center">
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Thời gian còn lại</p>
+                <div class="text-2xl font-black font-code text-emerald-400" id="exam-timer">20:00</div>
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="mt-6">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2">
+                <span>Tiến độ hoàn thành: <span id="answered-count" class="text-brand-600 font-bold">0</span>/{{ questions|length }} câu</span>
+                <span id="progress-percent" class="text-slate-500 font-mono">0%</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-brand-600 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Question Navigator Palette -->
+        <div class="mt-6 pt-6 border-t border-slate-100">
+            <p class="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider">Danh sách câu hỏi:</p>
+            <div class="flex flex-wrap gap-2">
+                {% for q in questions %}
+                <button type="button" onclick="jumpToQuestion({{ loop.index }})"
+                        id="nav-btn-{{ loop.index }}"
+                        class="w-8 h-8 rounded-lg text-xs font-bold flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:border-brand-500 transition-colors">
+                    {{ loop.index }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- STICKY FLOATING TIMER & PROGRESS BAR (Luôn trượt theo màn hình khi làm bài) -->
+    <div class="sticky top-16 z-30 bg-white/95 backdrop-blur border border-slate-200 rounded-2xl shadow-lg p-3 sm:p-4 mb-6 transition-all flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <!-- Timer Display -->
+            <div class="flex items-center gap-2 bg-slate-900 text-emerald-400 px-3.5 py-2 rounded-xl font-code font-bold text-sm sm:text-base shadow-inner">
+                <i data-lucide="clock" class="w-4 h-4 text-emerald-400 animate-pulse"></i>
+                <span id="exam-timer-sticky">20:00</span>
+            </div>
+            <div class="hidden sm:block">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Thời gian còn lại</p>
+                <p class="text-xs text-slate-600 font-semibold" id="sticky-timer-hint">Đồng hồ đang đếm ngược</p>
+            </div>
+        </div>
+
+        <!-- Center: Mini Progress -->
+        <div class="flex-1 max-w-md hidden md:block">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-1">
+                <span>Tiến độ: <span id="sticky-answered-count" class="text-brand-600 font-bold">0</span>/{{ questions|length }} câu</span>
+                <span id="sticky-progress-percent" class="text-slate-400 font-mono">0%</span>
+            </div>
+            <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div id="sticky-progress-bar" class="h-full bg-brand-600 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Right: Submit Button in sticky bar -->
+        <button type="button" onclick="confirmSubmit()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm flex items-center gap-1.5 transition-all flex-shrink-0">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i> Nộp bài (<span id="sticky-btn-count">0</span>/{{ questions|length }})
+        </button>
+    </div>
+
+    <!-- Exam Form -->
+    <form id="entrance-exam-form" method="POST" action="{{ url_for('entrance_test') }}" class="space-y-6">
+        
+        {% for q in questions %}
+        {% set q_idx = loop.index %}
+        <div class="question-card bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm transition-all" id="question-{{ q_idx }}">
+            <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-100">
+                    Câu {{ q_idx }} • Chủ đề: {{ q.topic }}
+                </span>
+                <span class="text-xs text-slate-400">1 điểm</span>
+            </div>
+
+            <h3 class="text-sm sm:text-base font-semibold text-slate-900 mb-4 leading-relaxed">
+                {{ q.question_text }}
+            </h3>
+
+            {% if q.code_snippet %}
+            <div class="bg-slate-900 rounded-xl p-4 mb-5 text-slate-100 font-code text-xs overflow-x-auto shadow-inner">
+                <pre><code>{{ q.code_snippet }}</code></pre>
+            </div>
+            {% endif %}
+
+            <!-- Options -->
+            <div class="space-y-2.5">
+                {% for opt in q.options %}
+                <label class="option-label flex items-center gap-3.5 p-3.5 rounded-xl border border-slate-200 hover:border-brand-400 hover:bg-brand-50/30 cursor-pointer text-xs sm:text-sm font-medium text-slate-700 transition-all">
+                    <input type="radio" name="q_{{ q.id }}" value="{{ loop.index0 }}"
+                           class="w-4 h-4 text-brand-600 focus:ring-brand-500"
+                           onchange="onAnswerSelected({{ q_idx }})">
+                    <span>{{ opt }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Bottom Action Bar -->
+        <div class="sticky bottom-6 bg-white/95 backdrop-blur rounded-2xl border border-slate-200 shadow-xl p-4 flex items-center justify-between">
+            <div class="text-xs text-slate-500">
+                Hãy kiểm tra kỹ các câu hỏi trước khi nộp bài.
+            </div>
+            <button type="button" onclick="confirmSubmit()" class="px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/30 flex items-center gap-2 transition-all">
+                <i data-lucide="send" class="w-4 h-4"></i> Nộp bài kiểm tra
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+            <i data-lucide="help-circle" class="w-6 h-6"></i>
+        </div>
+        <div class="text-center">
+            <h3 class="text-lg font-bold text-slate-900">Xác nhận nộp bài kiểm tra?</h3>
+            <p class="text-xs text-slate-500 mt-1" id="modal-summary-text">Bạn đã trả lời được 0/{{ questions|length }} câu hỏi.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3 pt-2">
+            <button type="button" onclick="closeConfirmModal()" class="py-2.5 px-4 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors">
+                Làm tiếp
+            </button>
+            <button type="button" onclick="submitFinal()" class="py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
+                Nộp ngay
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const totalQuestions = {{ questions|length }};
+    let answeredSet = new Set();
+
+    function onAnswerSelected(qIndex) {
+        answeredSet.add(qIndex);
+        
+        // Update palette button style
+        const btn = document.getElementById(`nav-btn-${qIndex}`);
+        if (btn) {
+            btn.className = 'w-8 h-8 rounded-lg text-xs font-bold flex items-center justify-center border border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm';
+        }
+
+        // Update progress bar (both top card and sticky bar)
+        const count = answeredSet.size;
+        const pct = Math.round((count / totalQuestions) * 100);
+
+        const answeredCountEl = document.getElementById('answered-count');
+        if (answeredCountEl) answeredCountEl.textContent = count;
+        const progressPercentEl = document.getElementById('progress-percent');
+        if (progressPercentEl) progressPercentEl.textContent = `${pct}%`;
+        const progressBarEl = document.getElementById('progress-bar');
+        if (progressBarEl) progressBarEl.style.width = `${pct}%`;
+
+        // Update sticky bar counters
+        const stickyAnsweredEl = document.getElementById('sticky-answered-count');
+        if (stickyAnsweredEl) stickyAnsweredEl.textContent = count;
+        const stickyPercentEl = document.getElementById('sticky-progress-percent');
+        if (stickyPercentEl) stickyPercentEl.textContent = `${pct}%`;
+        const stickyBarEl = document.getElementById('sticky-progress-bar');
+        if (stickyBarEl) stickyBarEl.style.width = `${pct}%`;
+        const stickyBtnCountEl = document.getElementById('sticky-btn-count');
+        if (stickyBtnCountEl) stickyBtnCountEl.textContent = count;
+    }
+
+    function jumpToQuestion(qIndex) {
+        const el = document.getElementById(`question-${qIndex}`);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('ring-2', 'ring-brand-500');
+            setTimeout(() => el.classList.remove('ring-2', 'ring-brand-500'), 1500);
+        }
+    }
+
+    // Countdown Timer (20 mins)
+    let timeLeft = 20 * 60;
+    const timerEl = document.getElementById('exam-timer');
+    const timerStickyEl = document.getElementById('exam-timer-sticky');
+    const stickyHintEl = document.getElementById('sticky-timer-hint');
+
+    const timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert('Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài của bạn.');
+            document.getElementById('entrance-exam-form').submit();
+            return;
+        }
+        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const s = (timeLeft % 60).toString().padStart(2, '0');
+        const timeStr = `${m}:${s}`;
+        
+        if (timerEl) timerEl.textContent = timeStr;
+        if (timerStickyEl) timerStickyEl.textContent = timeStr;
+
+        // Cảnh báo màu khi sắp hết giờ
+        if (timeLeft <= 60) {
+            if (timerStickyEl) timerStickyEl.className = 'text-rose-400 font-bold animate-pulse text-base';
+            if (stickyHintEl) {
+                stickyHintEl.textContent = 'Sắp hết giờ! Nộp bài ngay';
+                stickyHintEl.className = 'text-xs text-rose-600 font-bold';
+            }
+        } else if (timeLeft <= 300) {
+            if (timerStickyEl) timerStickyEl.className = 'text-amber-400 font-bold text-base';
+            if (stickyHintEl) {
+                stickyHintEl.textContent = 'Còn dưới 5 phút';
+                stickyHintEl.className = 'text-xs text-amber-600 font-semibold';
+            }
+        }
+    }, 1000);
+
+    // Modal Confirmation
+    const modal = document.getElementById('confirm-modal');
+    function confirmSubmit() {
+        const count = answeredSet.size;
+        document.getElementById('modal-summary-text').textContent = `Bạn đã trả lời được ${count}/${totalQuestions} câu hỏi.`;
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeConfirmModal() {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function submitFinal() {
+        document.getElementById('entrance-exam-form').submit();
+    }
+</script>
+{% endblock %}

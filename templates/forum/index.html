@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Diễn đàn Lập trình & Hỏi đáp - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Top Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold mb-2">
+                <i data-lucide="messages-square" class="w-3.5 h-3.5"></i> Cộng đồng học lập trình
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Diễn đàn Trao đổi & Hỏi đáp</h1>
+            <p class="text-slate-500 text-sm mt-1">Nơi đặt câu hỏi, thảo luận lỗi lập trình C++ và nhận phản hồi từ các chuyên gia.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ url_for('my_posts') }}" class="px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-2">
+                <i data-lucide="user" class="w-4 h-4"></i> Bài viết của tôi
+            </a>
+            <a href="{{ url_for('forum_create_thread') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-sm flex items-center gap-2 transition-all">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Đặt câu hỏi mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Categories Strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+        {% for cat in categories %}
+        <a href="{{ url_for('forum_category', slug=cat.slug) }}" class="p-4 rounded-xl border border-slate-200 bg-white hover:border-brand-500 hover:shadow-sm transition-all text-center group">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-brand-50 text-slate-600 group-hover:text-brand-600 flex items-center justify-center mx-auto mb-2 transition-colors">
+                <i data-lucide="{{ cat.icon }}" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-xs text-slate-800 group-hover:text-brand-600 truncate">{{ cat.name }}</h4>
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Main Layout: Left (Thread List), Right (FAQ & Sidebar) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Threads (8 cols) -->
+        <div class="lg:col-span-8 space-y-6">
+            
+            <!-- Filter Bar & Search -->
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                <!-- Filter Tabs -->
+                <div class="flex items-center gap-1 w-full sm:w-auto text-xs font-semibold text-slate-600">
+                    <a href="{{ url_for('forum_index', tab='latest', q=keyword) }}"
+                       class="px-3 py-1.5 rounded-lg transition-colors {% if tab == 'latest' %}bg-brand-50 text-brand-700 font-bold{% else %}hover:bg-slate-100{% endif %}">
+                        Mới nhất
+                    </a>
+                    <a href="{{ url_for('forum_index', tab='popular', q=keyword) }}"
+                       class="px-3 py-1.5 rounded-lg transition-colors {% if tab == 'popular' %}bg-brand-50 text-brand-700 font-bold{% else %}hover:bg-slate-100{% endif %}">
+                        Nhiều tương tác
+                    </a>
+                    <a href="{{ url_for('forum_index', tab='unanswered', q=keyword) }}"
+                       class="px-3 py-1.5 rounded-lg transition-colors {% if tab == 'unanswered' %}bg-brand-50 text-brand-700 font-bold{% else %}hover:bg-slate-100{% endif %}">
+                        Chưa trả lời
+                    </a>
+                </div>
+
+                <!-- Search Input -->
+                <form method="GET" action="{{ url_for('forum_index') }}" class="w-full sm:w-64 relative">
+                    <input type="hidden" name="tab" value="{{ tab }}">
+                    <input type="text" name="q" value="{{ keyword }}" placeholder="Tìm kiếm câu hỏi..."
+                           class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                    <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
+                </form>
+            </div>
+
+            <!-- Thread Cards List -->
+            {% if threads %}
+            <div class="space-y-4">
+                {% for t in threads %}
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-2">
+                            <span class="px-2.5 py-0.5 rounded-md font-semibold bg-indigo-50 text-indigo-700 text-[11px]">
+                                {{ t.category_name }}
+                            </span>
+                            <span class="text-slate-400 text-[11px]">{{ t.created_at[:16] }}</span>
+                        </div>
+
+                        <h3 class="text-base font-bold text-slate-900 hover:text-brand-600 transition-colors mb-2">
+                            <a href="{{ url_for('forum_thread_detail', thread_id=t.id) }}">{{ t.title }}</a>
+                        </h3>
+
+                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">{{ t.content }}</p>
+
+                        <!-- Tags -->
+                        {% if t.tags %}
+                        <div class="flex flex-wrap gap-1.5 mb-3">
+                            {% for tag in t.tags.split(',') %}
+                            <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium">#{{ tag.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Thread Footer -->
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-[10px]">
+                                {{ t.author_name[:1].upper() }}
+                            </div>
+                            <span class="font-medium text-slate-700">{{ t.author_name }}</span>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5 text-slate-400"></i> {{ t.views_count }}</span>
+                            <span class="flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3.5 h-3.5 text-slate-400"></i> {{ t.like_count }}</span>
+                            <span class="flex items-center gap-1 font-bold text-brand-600"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> {{ t.reply_count }} trả lời</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+                <i data-lucide="message-circle-off" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i>
+                <h4 class="font-bold text-slate-800 text-sm">Chưa có câu hỏi nào</h4>
+                <p class="text-xs text-slate-500 mt-1 mb-4">Hãy là người đầu tiên đặt câu hỏi cho cộng đồng nhé!</p>
+                <a href="{{ url_for('forum_create_thread') }}" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-brand-600">Đặt câu hỏi ngay</a>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- Right: FAQ & Guidelines (4 cols) -->
+        <div class="lg:col-span-4 space-y-6">
+            
+            <!-- Quick FAQ Box -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="help-circle" class="w-4 h-4 text-brand-600"></i> Câu hỏi thường gặp (FAQ)
+                </h3>
+                <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
+                    <div class="pb-3 border-b border-slate-100">
+                        <p class="font-bold text-slate-800 mb-1">Làm thế nào để đính kèm code C++?</p>
+                        <p class="text-slate-500">Bạn hãy bao bọc đoạn code bằng dấu ba nháy ngược ```cpp ... ``` khi đăng bài.</p>
+                    </div>
+                    <div class="pb-3 border-b border-slate-100">
+                        <p class="font-bold text-slate-800 mb-1">Ai có thể trả lời câu hỏi?</p>
+                        <p class="text-slate-500">Tất cả thành viên đã đăng nhập và các chuyên gia, giảng viên phụ trách hệ thống.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-800 mb-1">Câu trả lời được chấp nhận là gì?</p>
+                        <p class="text-slate-500">Người đặt câu hỏi có thể nhấn nút "Chấp nhận" để đánh dấu câu trả lời chính xác và hữu ích nhất.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forum Rules -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 p-6 text-xs text-slate-600 space-y-2">
+                <h4 class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i> Quy định thảo luận
+                </h4>
+                <p>• Tôn trọng các thành viên khác trong cộng đồng.</p>
+                <p>• Mô tả lỗi cụ thể, có thông báo lỗi của compiler.</p>
+                <p>• Không chia sẻ mã nguồn độc hại hoặc spam.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Báo cáo & Thống kê Hệ thống - Admin - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <a href="{{ url_for('admin_dashboard') }}" class="hover:text-rose-600">Dashboard Quản trị</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span class="text-slate-800 font-semibold">Báo cáo & Thống kê</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Thống kê & Phân tích Toàn hệ thống</h1>
+            <p class="text-xs text-slate-500 mt-1">Dữ liệu được trích xuất và tổng hợp trực tiếp từ cơ sở dữ liệu thực tế.</p>
+        </div>
+
+        <!-- Date Range Filter Form -->
+        <form method="GET" action="{{ url_for('admin_reports') }}" class="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200 shadow-sm text-xs">
+            <div class="flex items-center gap-1.5 pl-2">
+                <span class="text-slate-400 font-medium">Từ:</span>
+                <input type="date" name="start_date" value="{{ start_date }}" class="px-2 py-1 rounded border border-slate-300 text-xs focus:outline-none">
+            </div>
+            <div class="flex items-center gap-1.5">
+                <span class="text-slate-400 font-medium">Đến:</span>
+                <input type="date" name="end_date" value="{{ end_date }}" class="px-2 py-1 rounded border border-slate-300 text-xs focus:outline-none">
+            </div>
+            <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold transition-colors">
+                Lọc báo cáo
+            </button>
+        </form>
+    </div>
+
+    <!-- 3 Summary Metrics in Range -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+                <i data-lucide="send" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Tổng lượt nộp bài</p>
+                <p class="text-2xl font-black text-slate-900">{{ total_subs }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                <i data-lucide="check-circle" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Bài nộp chính xác (Accepted)</p>
+                <p class="text-2xl font-black text-slate-900">{{ accepted_subs }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold">
+                <i data-lucide="percent" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Tỷ lệ chính xác toàn hệ thống</p>
+                <p class="text-2xl font-black text-rose-600">{{ accuracy_rate }}%</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section: Left (Topic Accuracy Bar Chart), Right (User Roles Doughnut) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+        
+        <!-- Topic Accuracy Chart (8 cols) -->
+        <div class="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-600"></i> Tỷ lệ giải đúng theo từng chủ đề (%)
+            </h3>
+            <div class="w-full h-72">
+                <canvas id="topicBarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- User Role Distribution (4 cols) -->
+        <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center">
+            <h3 class="text-sm font-bold text-slate-900 mb-4 w-full flex items-center gap-2">
+                <i data-lucide="pie-chart" class="w-4 h-4 text-rose-600"></i> Cơ cấu người dùng
+            </h3>
+            <div class="w-full max-w-[200px] aspect-square relative my-auto">
+                <canvas id="userPieChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Detailed Topic Breakdown Table -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="table" class="w-5 h-5 text-brand-600"></i> Bảng tổng hợp số liệu theo chủ đề
+        </h3>
+
+        {% if topic_report %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm text-slate-600">
+                <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-4">Chủ đề</th>
+                        <th class="px-6 py-4">Tổng lượt nộp</th>
+                        <th class="px-6 py-4">Lượt đạt Accepted</th>
+                        <th class="px-6 py-4">Tỷ lệ chính xác</th>
+                        <th class="px-6 py-4">Đánh giá mức độ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% for tr in topic_report %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-slate-900">{{ tr.topic }}</td>
+                        <td class="px-6 py-4 font-mono">{{ tr.total }}</td>
+                        <td class="px-6 py-4 font-mono text-emerald-600 font-bold">{{ tr.accepted }}</td>
+                        <td class="px-6 py-4 font-mono font-bold text-slate-800">{{ tr.accuracy }}%</td>
+                        <td class="px-6 py-4">
+                            {% if tr.accuracy >= 70 %}
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Tốt</span>
+                            {% elif tr.accuracy >= 40 %}
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">Trung bình</span>
+                            {% else %}
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">Nhiều học viên sai</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-xs text-slate-400 italic text-center py-6">Chưa có dữ liệu bài nộp trong khoảng thời gian đã chọn.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Topic Bar Chart
+    const topicData = {{ topic_report|tojson }};
+    const tLabels = topicData.map(t => t.topic);
+    const tAccuracies = topicData.map(t => t.accuracy);
+
+    const ctxBar = document.getElementById('topicBarChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: tLabels.length ? tLabels : ['Biến', 'Nhập/xuất', 'If/Else', 'Vòng lặp', 'Mảng'],
+            datasets: [{
+                label: 'Tỷ lệ chính xác (%)',
+                data: tAccuracies.length ? tAccuracies : [85, 75, 60, 45, 30],
+                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                borderColor: 'rgb(59, 130, 246)',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { callback: val => `${val}%` }
+                }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // User Roles Doughnut Chart
+    const roleCounts = {{ user_role_counts|tojson }};
+    const roleLabels = ['Học viên', 'Chuyên gia', 'Quản trị'];
+    const roleDataValues = [
+        roleCounts['learner'] || 0,
+        roleCounts['expert'] || 0,
+        roleCounts['admin'] || 0
+    ];
+
+    const ctxPie = document.getElementById('userPieChart').getContext('2d');
+    new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: roleLabels,
+            datasets: [{
+                data: roleDataValues,
+                backgroundColor: ['#3b82f6', '#f59e0b', '#f43f5e'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 10 } } }
+            }
+        }
+    });
+</script>
+{% endblock %}

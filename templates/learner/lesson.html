@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} - {{ lesson.course_title }} - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {% if is_trial_guest %}
+    <div class="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-sm font-bold">Chế độ xem thử bài học miễn phí dành cho khách</p>
+                <p class="text-xs text-amber-700 mt-0.5">Bạn đang học thử bài học mở. Hãy đăng nhập hoặc đăng ký để nộp bài tập và lưu lại tiến độ học tập của bạn.</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="{{ url_for('login') }}" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-sm">Đăng nhập</a>
+            <a href="{{ url_for('register') }}" class="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold">Đăng ký</a>
+        </div>
+    </div>
+    {% endif %}
+
+    
+    <!-- Breadcrumb & Top Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-slate-200 gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <a href="{{ url_for('course_list') }}" class="hover:text-brand-600">Khóa học</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <a href="{{ url_for('course_detail', course_id=lesson.course_id) }}" class="hover:text-brand-600 truncate max-w-xs">{{ lesson.course_title }}</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span class="text-slate-800 font-semibold">{{ lesson.chapter_title }}</span>
+            </div>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ lesson.title }}</h1>
+        </div>
+
+        <!-- Mark Complete Toggle Button -->
+        <button id="btn-toggle-complete" data-lesson-id="{{ lesson.id }}"
+                class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm
+                {% if is_completed %}bg-emerald-600 text-white hover:bg-emerald-700{% else %}bg-white border border-slate-300 text-slate-700 hover:bg-slate-50{% endif %}">
+            <i data-lucide="{% if is_completed %}check-circle-2{% else %}circle{% endif %}" class="w-4 h-4"></i>
+            <span id="complete-status-text">{% if is_completed %}Đã hoàn thành{% else %}Đánh dấu hoàn thành{% endif %}</span>
+        </button>
+    </div>
+
+    <!-- 2-Column Study Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Syllabus Table of Contents (3 cols) -->
+        <div class="lg:col-span-4 order-2 lg:order-1">
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm sticky top-24 max-h-[80vh] flex flex-col">
+                <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center justify-between">
+                    <span>Mục lục bài học</span>
+                    <span class="text-xs font-normal text-slate-400">{{ all_lessons|length }} bài</span>
+                </h3>
+
+                <div class="space-y-1 overflow-y-auto flex-1 pr-1 divide-y divide-slate-100">
+                    {% for l in all_lessons %}
+                    <a href="{{ url_for('lesson_view', lesson_id=l.id) }}"
+                       class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors
+                       {% if l.id == lesson.id %}bg-brand-50 text-brand-700 font-bold border border-brand-200
+                       {% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">
+                        <div class="flex items-center gap-2.5 truncate">
+                            {% if l.id in completed_ids %}
+                                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
+                            {% else %}
+                                <i data-lucide="file-text" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
+                            {% endif %}
+                            <span class="truncate">{{ l.order_index }}. {{ l.title }}</span>
+                        </div>
+                        {% if l.id == lesson.id %}
+                            <span class="w-2 h-2 rounded-full bg-brand-600 flex-shrink-0"></span>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Main Lesson Content (8 cols) -->
+        <div class="lg:col-span-8 order-1 lg:order-2 space-y-8">
+            
+            <!-- Theory Content -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-brand-600 mb-2">1. Lý thuyết & Khái niệm</h2>
+                    <div class="text-sm text-slate-700 leading-relaxed space-y-3 whitespace-pre-line font-normal">
+                        {{ lesson.content }}
+                    </div>
+                </div>
+
+                <!-- Syntax Guide -->
+                {% if lesson.syntax_guide %}
+                <div class="bg-slate-900 rounded-xl p-5 text-slate-100 font-code text-xs">
+                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800 text-slate-400 font-sans text-[11px]">
+                        <span class="flex items-center gap-1.5"><i data-lucide="code" class="w-3.5 h-3.5 text-brand-400"></i> Cú pháp chuẩn (Syntax)</span>
+                    </div>
+                    <pre class="overflow-x-auto text-amber-300"><code>{{ lesson.syntax_guide }}</code></pre>
+                </div>
+                {% endif %}
+
+                <!-- Code Example -->
+                {% if lesson.example_code %}
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-brand-600 mb-2">2. Ví dụ minh họa thực tế</h2>
+                    <div class="bg-slate-900 rounded-xl overflow-hidden shadow-md border border-slate-800">
+                        <div class="bg-slate-950 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 font-sans">
+                            <span class="font-mono text-emerald-400">example.cpp</span>
+                            <button onclick="copyCode(this)" class="flex items-center gap-1 hover:text-white transition-colors">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Sao chép code
+                            </button>
+                        </div>
+                        <pre id="code-example-block" class="p-4 text-xs font-code text-emerald-300 overflow-x-auto"><code>{{ lesson.example_code }}</code></pre>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Expected Output -->
+                {% if lesson.example_output %}
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Kết quả xuất ra màn hình (Output)</h2>
+                    <div class="bg-slate-100 rounded-xl p-4 border border-slate-200 font-code text-xs text-slate-800 whitespace-pre-line">
+                        {{ lesson.example_output }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Quiz Section -->
+            {% if quiz_items %}
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+                <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i> Câu hỏi kiểm tra nhanh kiến thức
+                </h3>
+
+                <div class="space-y-6">
+                    {% for q in quiz_items %}
+                    <div class="quiz-item p-4 rounded-xl bg-slate-50 border border-slate-200" data-correct="{{ q.correct }}">
+                        <p class="text-sm font-semibold text-slate-800 mb-3">{{ loop.index }}. {{ q.question }}</p>
+                        <div class="space-y-2">
+                            {% for opt in q.options %}
+                            <label class="flex items-center gap-3 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 cursor-pointer text-xs font-medium text-slate-700 transition-colors">
+                                <input type="radio" name="quiz_{{ loop.index0 }}" value="{{ loop.index0 }}" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
+                                <span>{{ opt }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button type="button" onclick="checkQuiz(this)" class="px-4 py-1.5 rounded-lg text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
+                                Kiểm tra đáp án
+                            </button>
+                            <span class="quiz-feedback text-xs font-bold hidden"></span>
+                        </div>
+                        <div class="quiz-explanation mt-3 text-xs text-slate-600 bg-white p-3 rounded-lg border border-slate-200 hidden">
+                            <strong class="text-slate-800">Giải thích:</strong> {{ q.explanation }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Related Practice Exercises -->
+            {% if related_exercises %}
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+                <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="terminal" class="w-5 h-5 text-brand-600"></i> Bài tập thực hành liên quan
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% for ex in related_exercises %}
+                    <a href="{{ url_for('exercise_detail', exercise_id=ex.id) }}" class="p-4 rounded-xl border border-slate-200 hover:border-brand-500 hover:shadow-sm transition-all group bg-slate-50/50">
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-700 group-hover:text-brand-600">{{ ex.title }}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-700">{{ ex.difficulty }}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">{{ ex.description }}</p>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Navigation Buttons (Prev / Next) -->
+            <div class="flex items-center justify-between pt-4">
+                {% if prev_lesson %}
+                <a href="{{ url_for('lesson_view', lesson_id=prev_lesson.id) }}" class="px-5 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Bài trước
+                </a>
+                {% else %}
+                <div></div>
+                {% endif %}
+
+                {% if next_lesson %}
+                <a href="{{ url_for('lesson_view', lesson_id=next_lesson.id) }}" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 flex items-center gap-2 transition-colors shadow-sm">
+                    Bài tiếp theo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Copy code snippet
+    function copyCode(btn) {
+        const codeText = document.getElementById('code-example-block').innerText;
+        navigator.clipboard.writeText(codeText).then(() => {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Đã sao chép!`;
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                lucide.createIcons();
+            }, 2000);
+        });
+    }
+
+    // Toggle lesson completed status
+    const btnComplete = document.getElementById('btn-toggle-complete');
+    if (btnComplete) {
+        btnComplete.addEventListener('click', async () => {
+            const lessonId = btnComplete.dataset.lessonId;
+            try {
+                const res = await fetch(`/api/lessons/${lessonId}/toggle-complete`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    const textSpan = document.getElementById('complete-status-text');
+                    if (data.completed) {
+                        btnComplete.className = 'px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm bg-emerald-600 text-white hover:bg-emerald-700';
+                        textSpan.textContent = 'Đã hoàn thành';
+                    } else {
+                        btnComplete.className = 'px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm bg-white border border-slate-300 text-slate-700 hover:bg-slate-50';
+                        textSpan.textContent = 'Đánh dấu hoàn thành';
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    // Check quick quiz answer
+    function checkQuiz(btn) {
+        const item = btn.closest('.quiz-item');
+        const correct = parseInt(item.dataset.correct);
+        const selected = item.querySelector('input[type="radio"]:checked');
+        const feedback = item.querySelector('.quiz-feedback');
+        const explanation = item.querySelector('.quiz-explanation');
+
+        if (!selected) {
+            alert('Vui lòng chọn một đáp án trước khi kiểm tra!');
+            return;
+        }
+
+        const chosenVal = parseInt(selected.value);
+        feedback.classList.remove('hidden');
+        explanation.classList.remove('hidden');
+
+        if (chosenVal === correct) {
+            feedback.textContent = 'Chính xác! Rất tốt.';
+            feedback.className = 'quiz-feedback text-xs font-bold text-emerald-600';
+        } else {
+            feedback.textContent = 'Chưa chính xác! Xem giải thích bên dưới.';
+            feedback.className = 'quiz-feedback text-xs font-bold text-rose-600';
+        }
+    }
+</script>
+{% endblock %}

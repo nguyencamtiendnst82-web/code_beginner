@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Cấu hình Test Case - {{ exercise.title }} - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <a href="{{ url_for('expert_exercises') }}" class="hover:text-amber-600">Bài tập</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span class="text-slate-800 font-semibold truncate max-w-sm">{{ exercise.title }}</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Cấu hình Bộ Test Case</h1>
+            <p class="text-xs text-slate-500 mt-1">Quản lý test case công khai và test case ẩn dùng để chấm điểm tự động.</p>
+        </div>
+
+        <!-- Verify All Test Cases Button -->
+        <button type="button" id="btn-verify-tests" onclick="verifyTestSuite({{ exercise.id }})"
+                class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 flex items-center gap-2 transition-all">
+            <i data-lucide="play-circle" class="w-4 h-4"></i> Kiểm tra bộ test với Lời giải mẫu
+        </button>
+    </div>
+
+    <!-- Verification Result Box -->
+    <div id="verify-result-box" class="hidden mb-6 p-4 rounded-xl border text-xs">
+        <p class="font-bold flex items-center gap-2" id="verify-result-title"></p>
+        <div id="verify-result-details" class="mt-2 space-y-1 font-mono text-[11px]"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: List of Existing Test Cases (7 cols) -->
+        <div class="lg:col-span-7 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center justify-between">
+                <span>Danh sách Test case hiện tại ({{ test_cases|length }})</span>
+                <span class="text-xs font-normal text-slate-400">Tổng điểm: {{ exercise.points }}đ</span>
+            </h3>
+
+            {% if test_cases %}
+                {% for tc in test_cases %}
+                <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-800">Test #{{ loop.index }}</span>
+                            {% if tc.is_hidden %}
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-100">Ẩn (Chấm điểm)</span>
+                            {% else %}
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Công khai (Mẫu)</span>
+                            {% endif %}
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-bold text-slate-600">{{ tc.points }} điểm</span>
+                            <form method="POST" action="{{ url_for('expert_testcase_delete', tc_id=tc.id) }}" onsubmit="return confirm('Bạn có chắc chắn muốn xóa test case này?');">
+                                <button type="submit" class="text-rose-600 hover:text-rose-800 p-1" title="Xóa test case">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 font-code text-xs">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-0.5 font-sans">Input:</span>
+                            <pre class="bg-slate-900 text-emerald-300 p-2 rounded overflow-x-auto text-[11px]">{{ tc.input_data }}</pre>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-0.5 font-sans">Output mong đợi:</span>
+                            <pre class="bg-slate-900 text-emerald-300 p-2 rounded overflow-x-auto text-[11px]">{{ tc.expected_output }}</pre>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-400 text-xs">
+                    Bài tập này chưa có test case nào. Hãy thêm test case đầu tiên ở biểu mẫu bên phải!
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Right: Add New Test Case Form (5 cols) -->
+        <div class="lg:col-span-5">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm sticky top-24">
+                <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4 text-amber-600"></i> Thêm Test case mới
+                </h3>
+
+                <form method="POST" action="{{ url_for('expert_testcases', exercise_id=exercise.id) }}" class="space-y-4 text-xs">
+                    <div>
+                        <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Dữ liệu đầu vào (Input Data) <span class="text-rose-500">*</span></label>
+                        <textarea name="input_data" rows="3" required
+                                  class="w-full p-2.5 rounded-xl border border-slate-300 font-code text-xs focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="10 20"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Kết quả mong đợi (Expected Output) <span class="text-rose-500">*</span></label>
+                        <textarea name="expected_output" rows="3" required
+                                  class="w-full p-2.5 rounded-xl border border-slate-300 font-code text-xs focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="30"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 items-center">
+                        <div>
+                            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Điểm trọng số</label>
+                            <input type="number" name="points" value="2" min="1" max="10"
+                                   class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        </div>
+
+                        <div class="pt-5">
+                            <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-700">
+                                <input type="checkbox" name="is_hidden" value="1" checked class="w-4 h-4 text-amber-600 rounded">
+                                <span>Ẩn với học viên</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full py-2.5 px-4 rounded-xl font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition-all">
+                            Thêm test case
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    async function verifyTestSuite(exerciseId) {
+        const btn = document.getElementById('btn-verify-tests');
+        const box = document.getElementById('verify-result-box');
+        const title = document.getElementById('verify-result-title');
+        const details = document.getElementById('verify-result-details');
+
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Đang chạy kiểm thử...`;
+        lucide.createIcons();
+
+        try {
+            const res = await fetch(`/expert/exercises/${exerciseId}/verify-tests`, { method: 'POST' });
+            const data = await res.json();
+            box.classList.remove('hidden');
+
+            if (data.status === 'Accepted') {
+                box.className = 'mb-6 p-4 rounded-xl border text-xs bg-emerald-50 border-emerald-200 text-emerald-800';
+                title.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> Bộ Test Case hợp lệ 100%! Lời giải tham chiếu đạt điểm tuyệt đối (${data.score} điểm, ${data.passed_tests}/${data.total_tests} tests).`;
+            } else {
+                box.className = 'mb-6 p-4 rounded-xl border text-xs bg-rose-50 border-rose-200 text-rose-800';
+                title.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> Phát hiện sai lệch! Trạng thái: ${data.status} (${data.passed_tests}/${data.total_tests} tests đạt).`;
+            }
+
+            details.innerHTML = (data.test_details || []).map(tc => `
+                <div>Test #${tc.test_index}: ${tc.status} (${tc.execution_time}s)</div>
+            `).join('');
+
+            lucide.createIcons();
+        } catch (err) {
+            console.error(err);
+            alert('Lỗi kiểm tra bộ test.');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = `<i data-lucide="play-circle" class="w-4 h-4"></i> Kiểm tra bộ test với Lời giải mẫu`;
+            lucide.createIcons();
+        }
+    }
+</script>
+{% endblock %}

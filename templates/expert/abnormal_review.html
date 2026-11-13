@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Đánh giá bất thường gõ code - Chuyên gia CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700">Anti-Cheat Telemetry</span>
+                <span class="text-xs text-slate-400">Giám sát hành vi nộp code học viên</span>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 mt-1">Đánh giá các bài nộp bị nghi vấn bất thường</h1>
+        </div>
+        <a href="{{ url_for('expert_dashboard') }}" class="px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold rounded-xl transition-colors">
+            Quay lại Dashboard
+        </a>
+    </div>
+
+    <!-- Alert / Info Banner -->
+    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 mb-8 flex items-start gap-3">
+        <i data-lucide="info" class="w-5 h-5 text-amber-600 mt-0.5 shrink-0"></i>
+        <div class="text-xs text-amber-900 leading-relaxed">
+            Hệ thống tự động phát hiện các bài nộp có chỉ số bất thường: <strong>Dán code (Paste) khối lượng lớn mà không có nhịp gõ phím tương ứng</strong>, hoặc rời tab bất thường khi đang làm bài. Chuyên gia có thể xem lại mã nguồn và telemetry để quyết định công nhận điểm hoặc yêu cầu học viên làm lại.
+        </div>
+    </div>
+
+    <div class="space-y-6">
+        {% if submissions %}
+            {% for s in submissions %}
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">
+                                {{ s.student_name[:1].upper() }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900">{{ s.student_name }} ({{ s.username }})</p>
+                                <p class="text-[11px] text-slate-500">Bài tập: <strong>{{ s.exercise_title }}</strong> • Nộp lúc: {{ s.submitted_at }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200 flex items-center gap-1">
+                                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Điểm nghi vấn: {{ s.anomaly_score }}/100
+                            </span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700">
+                                Trạng thái: {{ s.anomaly_status }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Left: Telemetry Data -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="activity" class="w-4 h-4 text-brand-600"></i> Chỉ số Telemetry Gõ Phím
+                            </h4>
+                            <div class="space-y-2 text-xs">
+                                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                    <span class="text-slate-500">Số lần Paste code:</span>
+                                    <strong class="text-rose-600">{{ s.paste_count or 1 }} lần</strong>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                    <span class="text-slate-500">Số phím đã gõ:</span>
+                                    <strong class="text-slate-800">{{ s.keystroke_count or 0 }} phím</strong>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                    <span class="text-slate-500">Độ dài mã nguồn nộp:</span>
+                                    <strong class="text-slate-800">{{ s.source_code|length }} ký tự</strong>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                    <span class="text-slate-500">Số lần rời tab làm bài:</span>
+                                    <strong class="text-amber-600">{{ s.tab_blurs or 0 }} lần</strong>
+                                </div>
+                                <div class="flex justify-between py-1">
+                                    <span class="text-slate-500">Kết quả chấm ban đầu:</span>
+                                    <span class="font-bold text-emerald-600">{{ s.status }} ({{ s.score }}đ)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Center: Code View -->
+                        <div class="lg:col-span-2 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Mã nguồn đã nộp:</h4>
+                                <span class="text-[11px] font-mono text-slate-400">{{ s.language }}</span>
+                            </div>
+                            <pre class="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs font-mono max-h-56 overflow-y-auto">{{ s.source_code }}</pre>
+
+                            <!-- Review Action Form -->
+                            <form method="POST" action="{{ url_for('expert_review_anomaly', submission_id=s.id) }}" class="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
+                                <input type="text" name="notes" placeholder="Ghi chú đánh giá của Chuyên gia..."
+                                    class="flex-1 w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                
+                                <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                                    <button type="submit" name="decision" value="verified_human" class="flex-1 sm:flex-initial px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl flex items-center justify-center gap-1">
+                                        <i data-lucide="check" class="w-3.5 h-3.5"></i> Công nhận tự làm
+                                    </button>
+                                    <button type="submit" name="decision" value="redo_required" class="flex-1 sm:flex-initial px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl flex items-center justify-center gap-1">
+                                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Yêu cầu nộp lại
+                                    </button>
+                                    <button type="submit" name="decision" value="flagged_cheat" class="flex-1 sm:flex-initial px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl flex items-center justify-center gap-1">
+                                        <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Hủy điểm gian lận
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
+                <i data-lucide="shield-check" class="w-12 h-12 text-emerald-400 mx-auto mb-3"></i>
+                <h3 class="text-sm font-bold text-slate-700">Không có bài nộp nào bị gắn cờ bất thường</h3>
+                <p class="text-xs text-slate-400 mt-1">Toàn bộ dữ liệu nhịp gõ phím và bài nộp hiện tại đều trong phạm vi bình thường.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

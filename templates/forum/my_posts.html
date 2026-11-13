@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Bài viết của tôi - Diễn đàn CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="mb-8">
+        <a href="{{ url_for('forum_index') }}" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1 mb-2">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Quay lại diễn đàn
+        </a>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Hoạt động Diễn đàn của Tôi</h1>
+        <p class="text-xs text-slate-500 mt-1">Quản lý các câu hỏi đã đăng, câu trả lời và bài viết đã lưu để đọc lại.</p>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div class="flex items-center border-b border-slate-200 bg-slate-50 px-6 text-xs font-bold text-slate-600 gap-6">
+            <button type="button" onclick="switchMyTab('threads')" id="tab-btn-my-threads" class="py-4 text-brand-600 border-b-2 border-brand-600">
+                Câu hỏi của tôi ({{ my_threads|length }})
+            </button>
+            <button type="button" onclick="switchMyTab('replies')" id="tab-btn-my-replies" class="py-4 text-slate-500 hover:text-slate-800">
+                Câu trả lời của tôi ({{ my_replies|length }})
+            </button>
+            <button type="button" onclick="switchMyTab('saved')" id="tab-btn-my-saved" class="py-4 text-slate-500 hover:text-slate-800">
+                Bài viết đã lưu ({{ saved_threads|length }})
+            </button>
+        </div>
+
+        <!-- Tab 1: My Threads -->
+        <div id="tab-content-my-threads" class="p-6 divide-y divide-slate-100">
+            {% if my_threads %}
+                {% for t in my_threads %}
+                <div class="py-4 flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700">{{ t.category_name }}</span>
+                            <span class="text-[11px] text-slate-400">{{ t.created_at }}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm hover:text-brand-600">
+                            <a href="{{ url_for('forum_thread_detail', thread_id=t.id) }}">{{ t.title }}</a>
+                        </h4>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs text-slate-500">
+                        <span>{{ t.reply_count }} trả lời</span>
+                        <span>{{ t.like_count }} thích</span>
+                        <a href="{{ url_for('forum_thread_detail', thread_id=t.id) }}" class="text-brand-600 font-bold">Xem &rarr;</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-xs text-slate-400 italic text-center py-6">Bạn chưa đăng câu hỏi nào.</p>
+            {% endif %}
+        </div>
+
+        <!-- Tab 2: My Replies -->
+        <div id="tab-content-my-replies" class="p-6 divide-y divide-slate-100 hidden">
+            {% if my_replies %}
+                {% for r in my_replies %}
+                <div class="py-4 space-y-1">
+                    <p class="text-xs text-slate-400">Trả lời trong: <a href="{{ url_for('forum_thread_detail', thread_id=r.thread_id) }}" class="font-bold text-slate-700 hover:text-brand-600">{{ r.thread_title }}</a></p>
+                    <p class="text-xs text-slate-600 italic">"{{ r.content[:150] }}..."</p>
+                    <span class="text-[10px] text-slate-400 block">{{ r.created_at }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-xs text-slate-400 italic text-center py-6">Bạn chưa có câu trả lời nào.</p>
+            {% endif %}
+        </div>
+
+        <!-- Tab 3: Saved Posts -->
+        <div id="tab-content-my-saved" class="p-6 divide-y divide-slate-100 hidden">
+            {% if saved_threads %}
+                {% for s in saved_threads %}
+                <div class="py-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">{{ s.category_name }}</span>
+                        <h4 class="font-bold text-slate-900 text-sm hover:text-brand-600 mt-1">
+                            <a href="{{ url_for('forum_thread_detail', thread_id=s.id) }}">{{ s.title }}</a>
+                        </h4>
+                        <p class="text-[11px] text-slate-400">Tác giả: {{ s.author_name }}</p>
+                    </div>
+                    <a href="{{ url_for('forum_thread_detail', thread_id=s.id) }}" class="text-xs font-bold text-brand-600">Đọc bài &rarr;</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-xs text-slate-400 italic text-center py-6">Chưa có bài viết nào được lưu.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function switchMyTab(tab) {
+        ['threads', 'replies', 'saved'].forEach(t => {
+            const btn = document.getElementById(`tab-btn-my-${t}`);
+            const content = document.getElementById(`tab-content-my-${t}`);
+            if (t === tab) {
+                btn.className = 'py-4 text-brand-600 border-b-2 border-brand-600';
+                content.classList.remove('hidden');
+            } else {
+                btn.className = 'py-4 text-slate-500 hover:text-slate-800';
+                content.classList.add('hidden');
+            }
+        });
+    }
+</script>
+{% endblock %}

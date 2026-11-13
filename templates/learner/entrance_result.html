@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title %}Kết quả kiểm tra đầu vào - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Top Result Card -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+            <div>
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                    Báo cáo năng lực chi tiết
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-2">Kết quả đánh giá đầu vào</h1>
+                <p class="text-xs text-slate-500 mt-1">Hoàn thành lúc {{ result.created_at }}</p>
+            </div>
+
+            <!-- Score Summary Badge -->
+            <div class="flex items-center gap-4 bg-gradient-to-r from-brand-50 to-indigo-50 border border-brand-200 p-4 rounded-2xl">
+                <div class="w-16 h-16 rounded-xl bg-brand-600 text-white flex flex-col items-center justify-center font-bold">
+                    <span class="text-2xl leading-none">{{ result.percentage|int }}%</span>
+                    <span class="text-[9px] uppercase tracking-wider text-brand-200 mt-0.5">Thành tích</span>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Điểm số đạt được:</p>
+                    <p class="text-lg font-bold text-slate-900">{{ result.total_score|int }} / {{ result.max_score|int }} câu đúng</p>
+                    <p class="text-xs font-semibold
+                        {% if result.percentage >= 80 %}text-emerald-600
+                        {% elif result.percentage >= 50 %}text-amber-600
+                        {% else %}text-rose-600{% endif %}">
+                        {% if result.percentage >= 80 %}Trình độ: Khá - Giỏi
+                        {% elif result.percentage >= 50 %}Trình độ: Trung bình - Nền tảng
+                        {% else %}Trình độ: Cần ôn tập từ cơ bản{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evaluation Summary Text -->
+        <div class="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed">
+            <strong class="text-slate-900 flex items-center gap-1.5 mb-1">
+                <i data-lucide="info" class="w-4 h-4 text-brand-600"></i> Đánh giá tổng quan từ hệ thống:
+            </strong>
+            {{ result.summary }}
+        </div>
+    </div>
+
+    <!-- Charts & Topic Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+        
+        <!-- Radar Chart (6 cols) -->
+        <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center">
+            <h3 class="text-sm font-bold text-slate-900 mb-4 w-full flex items-center gap-2">
+                <i data-lucide="radar" class="w-4 h-4 text-brand-600"></i> Biểu đồ Radar năng lực theo 8 chủ đề
+            </h3>
+            <div class="w-full max-w-md aspect-square relative">
+                <canvas id="topicRadarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Topic Mastery Table & Progress Bars (6 cols) -->
+        <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-600"></i> Tỷ lệ đạt theo từng chủ đề
+            </h3>
+            <div class="space-y-4">
+                {% for topic, pct in topic_breakdown.items() %}
+                <div>
+                    <div class="flex items-center justify-between text-xs font-semibold mb-1">
+                        <span class="text-slate-700">{{ topic }}</span>
+                        <span class="font-mono {% if pct >= 80 %}text-emerald-600{% elif pct >= 50 %}text-amber-600{% else %}text-rose-600 font-bold{% endif %}">
+                            {{ pct }}%
+                        </span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500
+                            {% if pct >= 80 %}bg-emerald-500
+                            {% elif pct >= 50 %}bg-amber-500
+                            {% else %}bg-rose-500{% endif %}"
+                             style="width: {{ pct }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- QUESTION-BY-QUESTION REVIEW SECTION -->
+    {% if details %}
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="check-square" class="w-5 h-5 text-brand-600"></i> Xem lại chi tiết từng câu hỏi
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">
+                    Xem lại các câu bạn đã trả lời đúng hoặc sai để rút kinh nghiệm học tập.
+                </p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+                <button type="button" onclick="filterQuestions('all')" id="tab-all"
+                        class="q-filter-btn px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition-all">
+                    Tất cả ({{ details|length }})
+                </button>
+                <button type="button" onclick="filterQuestions('wrong')" id="tab-wrong"
+                        class="q-filter-btn px-3 py-1.5 rounded-lg text-rose-700 hover:bg-white/60 transition-all">
+                    Câu sai ({{ details|rejectattr('is_correct')|list|length }})
+                </button>
+                <button type="button" onclick="filterQuestions('correct')" id="tab-correct"
+                        class="q-filter-btn px-3 py-1.5 rounded-lg text-emerald-700 hover:bg-white/60 transition-all">
+                    Câu đúng ({{ details|selectattr('is_correct')|list|length }})
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Cards List -->
+        <div class="space-y-4">
+            {% for item in details %}
+            <div class="review-q-card p-5 rounded-2xl border transition-all {% if item.is_correct %}bg-emerald-50/30 border-emerald-200{% else %}bg-rose-50/30 border-rose-200{% endif %}"
+                 data-status="{% if item.is_correct %}correct{% else %}wrong{% endif %}">
+                
+                <!-- Card Header -->
+                <div class="flex items-center justify-between gap-3 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-lg text-xs font-bold {% if item.is_correct %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+                            Câu {{ loop.index }} • {{ item.topic }}
+                        </span>
+                        {% if item.is_correct %}
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i> Chính xác (+1 điểm)
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-300">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i> Sai (0 điểm)
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Question Text -->
+                <h4 class="text-sm font-semibold text-slate-900 leading-relaxed mb-3">
+                    {{ item.question_text }}
+                </h4>
+
+                {% if item.code_snippet %}
+                <div class="bg-slate-900 rounded-xl p-3.5 mb-4 text-slate-100 font-code text-xs overflow-x-auto shadow-inner">
+                    <pre><code>{{ item.code_snippet }}</code></pre>
+                </div>
+                {% endif %}
+
+                <!-- Options Comparison Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                    <div class="p-3 rounded-xl border {% if item.is_correct %}bg-emerald-100/60 border-emerald-300 text-emerald-900{% else %}bg-rose-100/60 border-rose-300 text-rose-900{% endif %} text-xs">
+                        <span class="font-bold block mb-1 text-[11px] uppercase tracking-wider">
+                            {% if item.is_correct %}
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 inline text-emerald-600"></i> Đáp án bạn đã chọn (Chính xác):
+                            {% else %}
+                                <i data-lucide="x-circle" class="w-3.5 h-3.5 inline text-rose-600"></i> Đáp án bạn đã chọn (Chưa đúng):
+                            {% endif %}
+                        </span>
+                        <div class="font-semibold">{{ item.user_answer_text }}</div>
+                    </div>
+
+                    {% if not item.is_correct %}
+                    <div class="p-3 rounded-xl border bg-emerald-50 border-emerald-300 text-emerald-900 text-xs">
+                        <span class="font-bold block mb-1 text-[11px] uppercase tracking-wider text-emerald-700">
+                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 inline text-emerald-600"></i> Đáp án đúng là:
+                        </span>
+                        <div class="font-semibold text-emerald-900">{{ item.correct_answer_text }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Explanation -->
+                {% if item.explanation %}
+                <div class="p-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-600 leading-relaxed flex items-start gap-2">
+                    <i data-lucide="help-circle" class="w-4 h-4 text-brand-600 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                        <strong class="text-slate-800">Giải thích:</strong> {{ item.explanation }}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- RECOMMENDED LEARNING ROADMAP -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="compass" class="w-5 h-5 text-emerald-600"></i> Lộ trình học bổ sung được đề xuất riêng cho bạn
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">Dựa trên các chủ đề bạn còn yếu, hệ thống ưu tiên các bài học lý thuyết và bài tập rèn luyện tương ứng:</p>
+            </div>
+            <a href="{{ url_for('entrance_test') }}" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Làm lại test
+            </a>
+        </div>
+
+        <!-- Recommended Lessons -->
+        <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-600 mb-3">1. Bài học lý thuyết cần ôn tập</h4>
+            {% if weakness_report.recommended_lessons %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {% for l in weakness_report.recommended_lessons %}
+                <a href="{{ url_for('lesson_view', lesson_id=l.id) }}" class="p-3.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/20 transition-all flex items-center justify-between group">
+                    <div class="flex items-center gap-3 truncate">
+                        <div class="w-8 h-8 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center font-bold flex-shrink-0 text-xs">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                        </div>
+                        <div class="truncate">
+                            <p class="text-xs font-bold text-slate-800 group-hover:text-brand-600 truncate">{{ l.title }}</p>
+                            <p class="text-[10px] text-slate-400 truncate">{{ l.course_title }}</p>
+                        </div>
+                    </div>
+                    <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400 group-hover:text-brand-600 flex-shrink-0"></i>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-xs text-slate-500 italic">Không có bài học lý thuyết bắt buộc cần ôn tập. Bạn có thể tiếp tục tiến độ khóa học bình thường!</p>
+            {% endif %}
+        </div>
+
+        <!-- Recommended Exercises -->
+        <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-3">2. Bài tập thực hành rèn luyện (Ưu tiên mức Dễ &rarr; Trung bình)</h4>
+            {% if weakness_report.recommended_exercises %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for ex in weakness_report.recommended_exercises %}
+                <div class="p-4 rounded-xl border border-slate-200 hover:border-emerald-500 hover:shadow-sm transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-2">
+                            <span class="px-2 py-0.5 rounded font-medium bg-slate-100 text-slate-700 text-[10px]">{{ ex.topic }}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold
+                                {% if ex.difficulty == 'Dễ' %}bg-emerald-100 text-emerald-700
+                                {% else %}bg-amber-100 text-amber-700{% endif %}">
+                                {{ ex.difficulty }}
+                            </span>
+                        </div>
+                        <h5 class="font-bold text-slate-800 text-xs mb-1 hover:text-brand-600">
+                            <a href="{{ url_for('exercise_detail', exercise_id=ex.id) }}">{{ ex.title }}</a>
+                        </h5>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-slate-400 text-[10px]">{{ ex.points }} điểm</span>
+                        <a href="{{ url_for('exercise_detail', exercise_id=ex.id) }}" class="text-emerald-600 hover:text-emerald-800 font-bold flex items-center gap-1 text-[11px]">
+                            Làm bài ngay &rarr;
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-xs text-slate-500 italic">Tất cả các chủ đề đều đạt mức tốt! Hãy thử sức với các bài tập nâng cao trong ngân hàng đề.</p>
+            {% endif %}
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+            <a href="{{ url_for('course_list') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-sm flex items-center gap-2">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Đến danh sách khóa học
+            </a>
+            <a href="{{ url_for('exercise_list') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 flex items-center gap-2">
+                <i data-lucide="terminal" class="w-4 h-4"></i> Ngân hàng bài tập
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Radar Chart initialization
+    const breakdown = {{ topic_breakdown|tojson }};
+    const labels = Object.keys(breakdown);
+    const dataValues = Object.values(breakdown);
+
+    const ctx = document.getElementById('topicRadarChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Tỷ lệ hiểu biết (%)',
+                data: dataValues,
+                fill: true,
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                borderColor: 'rgb(59, 130, 246)',
+                pointBackgroundColor: 'rgb(59, 130, 246)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(59, 130, 246)'
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    angleLines: { color: '#e2e8f0' },
+                    grid: { color: '#e2e8f0' },
+                    suggestedMin: 0,
+                    suggestedMax: 100,
+                    ticks: {
+                        stepSize: 20,
+                        font: { size: 10 }
+                    },
+                    pointLabels: {
+                        font: { size: 11, weight: '600', family: 'Inter' },
+                        color: '#334155'
+                    }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            },
+            responsive: true,
+            maintainAspectRatio: true
+        }
+    });
+
+    function filterQuestions(status) {
+        document.querySelectorAll('.q-filter-btn').forEach(btn => {
+            btn.className = 'q-filter-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-white/60 transition-all';
+        });
+        const activeBtn = document.getElementById(`tab-${status}`);
+        if (activeBtn) {
+            activeBtn.className = 'q-filter-btn px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition-all font-bold';
+        }
+
+        document.querySelectorAll('.review-q-card').forEach(card => {
+            if (status === 'all') {
+                card.style.display = 'block';
+            } else if (card.getAttribute('data-status') === status) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

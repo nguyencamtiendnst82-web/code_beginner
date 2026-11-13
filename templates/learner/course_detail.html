@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Top Alert: Gợi ý làm bài test đầu vào nếu chưa làm -->
+    {% if not has_entrance_test %}
+    <div class="mb-8 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-slate-900">Bạn chưa làm bài kiểm tra đầu vào?</h4>
+                <p class="text-xs text-slate-600">Thực hiện bài test 15 câu để hệ thống tự động phân tích điểm mạnh/yếu và đề xuất lộ trình tối ưu cho bạn!</p>
+            </div>
+        </div>
+        <a href="{{ url_for('entrance_test') }}" class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+            Kiểm tra đầu vào ngay <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Course Overview & Syllabus (8 cols) -->
+        <div class="lg:col-span-8 space-y-8">
+            
+            <!-- Header Card -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-brand-100 text-brand-700">
+                        {{ course.language }}
+                    </span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+                        Cấp độ: {{ course.level }}
+                    </span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                        Miễn phí 100%
+                    </span>
+                </div>
+
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-3">
+                    {{ course.title }}
+                </h1>
+                
+                <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                    {{ course.description }}
+                </p>
+
+                <!-- Instructor Info -->
+                <div class="flex items-center gap-3 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                    <div class="w-9 h-9 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
+                        {{ (course.expert_name or 'CB')[:1] }}
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-800">{{ course.expert_name or 'Ban chuyên môn CodeBeginner' }}</p>
+                        <p class="text-slate-400">{{ course.expert_bio or 'Giảng viên chuyên môn lập trình' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Objectives -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="target" class="w-5 h-5 text-brand-600"></i> Mục tiêu & Kiến thức đạt được sau khóa học
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-700">
+                    <div class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                        <span>Nắm vững cú pháp chuẩn của ngôn ngữ C++ và tư duy lập trình thuật toán bài bản.</span>
+                    </div>
+                    <div class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                        <span>Tự tin xử lý các bài toán điều kiện, vòng lặp, mảng và các thao tác trên chuỗi.</span>
+                    </div>
+                    <div class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                        <span>Viết mã nguồn sạch, tối ưu thời gian chạy và quản lý bộ nhớ hợp lý.</span>
+                    </div>
+                    <div class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                        <span>Được chấm điểm trực tiếp và giải thích chi tiết từng trường hợp test case.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Curriculum / Chapters & Lessons -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                    <i data-lucide="list-ordered" class="w-5 h-5 text-brand-600"></i> Nội dung chương trình học
+                </h3>
+
+                <div class="space-y-4">
+                    {% for ch in chapters %}
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                        <div class="bg-slate-50 px-5 py-3.5 border-b border-slate-200 flex items-center justify-between font-bold text-sm text-slate-800">
+                            <span>{{ ch.title }}</span>
+                            <span class="text-xs font-normal text-slate-500">{{ ch.lessons|length }} bài học</span>
+                        </div>
+                        <div class="divide-y divide-slate-100">
+                            {% for l in ch.lessons %}
+                            <div class="px-5 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    {% if l.id in completed_lesson_ids %}
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
+                                    {% else %}
+                                        <i data-lucide="play-circle" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
+                                    {% endif %}
+                                    <span class="text-xs font-medium text-slate-700">{{ l.title }}</span>
+                                </div>
+                                <a href="{{ url_for('lesson_view', lesson_id=l.id) }}" class="text-xs font-semibold text-brand-600 hover:text-brand-800">
+                                    {% if l.id in completed_lesson_ids %}Xem lại{% else %}Học ngay{% endif %} &rarr;
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            <!-- Course Reviews & Ratings -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="star" class="w-5 h-5 text-amber-500 fill-amber-500"></i> Đánh giá từ học viên ({{ reviews|length }})
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Điểm đánh giá trung bình: <strong class="text-slate-800 font-bold">{{ avg_rating }} / 5.0</strong> ⭐</p>
+                    </div>
+                    {% if current_user %}
+                        <button onclick="document.getElementById('reviewModal').classList.remove('hidden')" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-semibold shadow-sm flex items-center gap-1.5">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Viết đánh giá
+                        </button>
+                    {% endif %}
+                </div>
+
+                {% if reviews %}
+                    <div class="space-y-4">
+                        {% for r in reviews %}
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-xs">
+                                            {{ r.student_name[:1].upper() }}
+                                        </div>
+                                        <span class="text-xs font-bold text-slate-800">{{ r.student_name }}</span>
+                                    </div>
+                                    <div class="text-amber-500 text-xs">
+                                        {{ '★' * r.rating }}{{ '☆' * (5 - r.rating) }}
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-600">{{ r.comment }}</p>
+                                <span class="text-[10px] text-slate-400 block mt-2">{{ r.created_at }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-xs text-slate-400 italic text-center py-6">Chưa có đánh giá nào cho khóa học này. Hãy là người đầu tiên chia sẻ cảm nhận!</p>
+                {% endif %}
+            </div>
+
+            <!-- Modal Đặt mục tiêu học tập -->
+            <div id="goalModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+                    <h3 class="text-base font-bold text-slate-900 mb-2">Thiết lập mục tiêu học tập</h3>
+                    <form method="POST" action="{{ url_for('course_goal', course_id=course.id) }}" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Số buổi học / tuần</label>
+                            <input type="number" name="days_per_week" min="1" max="7" value="{{ user_goal.sessions_per_week if user_goal else 3 }}" required
+                                class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Giờ nhắc học</label>
+                            <input type="time" name="reminder_time" value="{{ user_goal.reminder_time if user_goal else '20:00' }}" required
+                                class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Ngày dự kiến hoàn thành</label>
+                            <input type="date" name="target_completion_date" value="{{ user_goal.target_completion_date if user_goal else '' }}"
+                                class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-2">
+                            <button type="button" onclick="document.getElementById('goalModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">Hủy</button>
+                            <button type="submit" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg">Lưu mục tiêu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Gửi đánh giá khóa học -->
+            <div id="reviewModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+                    <h3 class="text-base font-bold text-slate-900 mb-2">Đánh giá khóa học</h3>
+                    <form method="POST" action="{{ url_for('course_review', course_id=course.id) }}" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Xếp hạng số sao</label>
+                            <select name="rating" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                                <option value="5">⭐⭐⭐⭐⭐ - Rất xuất sắc</option>
+                                <option value="4">⭐⭐⭐⭐ - Hài lòng, nội dung hay</option>
+                                <option value="3">⭐⭐⭐ - Bình thường</option>
+                                <option value="2">⭐⭐ - Cần cải thiện</option>
+                                <option value="1">⭐ - Chưa tốt</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Cảm nhận của bạn</label>
+                            <textarea name="review_text" rows="3" required placeholder="Chia sẻ trải nghiệm học tập của bạn về khóa học này..."
+                                class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs"></textarea>
+                        </div>
+                        <div class="flex justify-end gap-2 pt-2">
+                            <button type="button" onclick="document.getElementById('reviewModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">Hủy</button>
+                            <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg">Gửi đánh giá</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            </div>
+
+        </div>
+
+        <!-- Right: Progress Card & Action (4 cols) -->
+        <div class="lg:col-span-4 space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-24">
+                
+                <div class="rounded-xl overflow-hidden mb-5 aspect-video bg-slate-800">
+                    {% if course.image_url %}
+                        <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-brand-900 text-white font-bold">
+                            {{ course.language }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if enrollment %}
+                    <div class="mb-5">
+                        <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-1.5">
+                            <span>Tiến độ hoàn thành:</span>
+                            <span class="text-brand-600 font-bold">{{ enrollment.progress_percentage }}%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-brand-600 rounded-full transition-all" style="width: {{ enrollment.progress_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Learning Goal & Reminder -->
+                    <div class="mb-5 p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                        <div class="flex items-center justify-between font-bold text-slate-800 mb-1">
+                            <span class="flex items-center gap-1.5"><i data-lucide="bell" class="w-3.5 h-3.5 text-brand-600"></i> Mục tiêu & Nhắc học:</span>
+                            <button onclick="document.getElementById('goalModal').classList.remove('hidden')" class="text-brand-600 hover:underline font-semibold">Cài đặt</button>
+                        </div>
+                        {% if user_goal %}
+                            <p class="text-slate-500">{{ user_goal.sessions_per_week }} buổi/tuần • Giờ nhắc: {{ user_goal.reminder_time }}</p>
+                        {% else %}
+                            <p class="text-slate-400 italic">Chưa thiết lập mục tiêu tuần</p>
+                        {% endif %}
+                    </div>
+
+                    {% set first_lesson = chapters[0].lessons[0] if chapters and chapters[0].lessons else None %}
+                    {% if first_lesson %}
+                    <a href="{{ url_for('lesson_view', lesson_id=first_lesson.id) }}" class="w-full py-3 px-4 rounded-xl font-bold text-center text-sm text-white bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-600/30 flex items-center justify-center gap-2">
+                        <i data-lucide="play" class="w-4 h-4 fill-white"></i> Tiếp tục bài học
+                    </a>
+                    {% endif %}
+                {% else %}
+                    <form method="POST" action="{{ url_for('enroll_course', course_id=course.id) }}">
+                        <button type="submit" class="w-full py-3.5 px-4 rounded-xl font-bold text-center text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all">
+                            <i data-lucide="book-plus" class="w-4 h-4"></i> Bắt đầu học ngay
+                        </button>
+                    </form>
+                {% endif %}
+
+                <div class="mt-6 pt-5 border-t border-slate-100 space-y-3 text-xs text-slate-600">
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-slate-500"><i data-lucide="clock" class="w-4 h-4"></i> Thời lượng:</span>
+                        <span class="font-semibold text-slate-800">Tự do theo tiến độ</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-slate-500"><i data-lucide="code" class="w-4 h-4"></i> Ngôn ngữ:</span>
+                        <span class="font-semibold text-slate-800">{{ course.language }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-slate-500"><i data-lucide="layers" class="w-4 h-4"></i> Cấp độ:</span>
+                        <span class="font-semibold text-slate-800">{{ course.level }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-slate-500"><i data-lucide="award" class="w-4 h-4"></i> Chứng nhận:</span>
+                        <span class="font-semibold text-slate-800">Hoàn thành khóa học</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

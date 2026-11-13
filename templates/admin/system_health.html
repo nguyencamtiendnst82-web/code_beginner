@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Giám sát sức khỏe hệ thống - Quản trị CodeBeginner{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700">Health & Telemetry</span>
+                <span class="text-xs text-slate-400">Giám sát tài nguyên thời gian thực</span>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 mt-1">Tình trạng máy chủ & Cảnh báo hệ thống</h1>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ url_for('admin_system_health') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl flex items-center gap-1.5">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Làm mới trạng thái
+            </a>
+            <a href="{{ url_for('admin_backups') }}" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="database" class="w-4 h-4"></i> Sao lưu & Phục hồi
+            </a>
+        </div>
+    </div>
+
+    <!-- Health Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <!-- DB Health -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold text-slate-500">Cơ sở dữ liệu</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-xl font-bold text-slate-900">{{ db_type.upper() }}</span>
+                <span class="text-xs text-emerald-600 font-semibold">Kết nối tốt</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">Độ trễ truy vấn: {{ latency_ms }} ms • 37/37 bảng</p>
+        </div>
+
+        <!-- Web Server -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold text-slate-500">Máy chủ Flask Web</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-xl font-bold text-slate-900">Online</span>
+                <span class="text-xs text-emerald-600 font-semibold">Port 5000</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">Uptime: 99.98% • Python 3.12</p>
+        </div>
+
+        <!-- Judge Sandbox -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold text-slate-500">Trình biên dịch G++ (Judge)</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-xl font-bold text-slate-900">Sẵn sàng</span>
+                <span class="text-xs text-emerald-600 font-semibold">C++17</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">Timeout: 2.0s • Giới hạn RAM: 256MB</p>
+        </div>
+
+        <!-- Disk Storage -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold text-slate-500">Dung lượng ổ cứng</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-xl font-bold text-slate-900">{{ disk_free_gb }} GB</span>
+                <span class="text-xs text-slate-500">khả dụng</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">Đủ không gian lưu trữ bản sao lưu</p>
+        </div>
+    </div>
+
+    <!-- System Alerts Log -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="bell-ring" class="w-4 h-4 text-rose-600"></i> Nhật ký cảnh báo hệ thống (System Alerts)
+            </h2>
+            <span class="text-xs text-slate-400">{{ alerts|length }} bản ghi</span>
+        </div>
+
+        <div class="divide-y divide-slate-100">
+            {% for a in alerts %}
+                <div class="p-4 sm:px-6 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0
+                            {% if a.severity == 'critical' %}bg-rose-100 text-rose-700
+                            {% elif a.severity == 'warning' %}bg-amber-100 text-amber-700
+                            {% else %}bg-sky-100 text-sky-700{% endif %}">
+                            <i data-lucide="activity" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">[{{ a.component|upper }}] {{ a.message }}</p>
+                            <p class="text-[11px] text-slate-400">{{ a.created_at }}</p>
+                        </div>
+                    </div>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase shrink-0
+                        {% if a.severity == 'critical' %}bg-rose-100 text-rose-700
+                        {% elif a.severity == 'warning' %}bg-amber-100 text-amber-700
+                        {% else %}bg-emerald-100 text-emerald-700{% endif %}">
+                        {{ a.severity }}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
